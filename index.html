@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ETPC - Escola Técnico-Profissional de Cantanhede | Portal Interativo & IA</title>
+    <meta name="description" content="Conhece a oferta formativa da ETPC Cantanhede e coloca dúvidas ao tutor virtual sobre programação, tecnologia e outros temas.">
+    <title>ETPC Cantanhede | Oferta Formativa e Tutor Virtual</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons 6 -->
@@ -16,12 +17,12 @@
                 extend: {
                     colors: {
                         etpc: {
-                            blue: '#003865',      // Azul Oficial ETPC
-                            lightBlue: '#005599',
-                            darkBlue: '#002244',
-                            accent: '#F28C00',    // Laranja/Dourado Oficial
-                            accentHover: '#D97A00',
-                            lightBg: '#F4F7FA'
+                            blue: '#004B87',
+                            lightBlue: '#0072CE',
+                            darkBlue: '#002F56',
+                            accent: '#F39C12',
+                            accentHover: '#E08E0B',
+                            lightBg: '#F8FAFC'
                         }
                     },
                     fontFamily: {
@@ -37,267 +38,896 @@
         .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        /* Formatações dinâmicas da IA */
-        .ai-response ul { margin-top: 0.5rem; margin-bottom: 0.5rem; padding-left: 1.2rem; list-style-type: disc; }
-        .ai-response li { margin-bottom: 0.25rem; }
-        .ai-response p { margin-bottom: 0.75rem; }
-        .ai-response p:last-child { margin-bottom: 0; }
-        .ai-response strong { color: #003865; font-weight: 700; }
+
+        #chatMessages pre { tab-size: 4; }
+        #chatMessages a { overflow-wrap: anywhere; }
+        #chatMessages .copy-code { border: 1px solid rgba(255,255,255,.15); padding: 3px 8px; border-radius: 7px; }
+        #chatInput:focus-visible, #sendBtn:focus-visible, #chatBox button:focus-visible { outline: 3px solid #F39C12; outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
     </style>
 </head>
-<body class="bg-etpc-lightBg text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-white focus:text-etpc-blue focus:px-4 focus:py-3 focus:rounded-xl focus:shadow-lg">Saltar para o conteúdo principal</a>
 
-    <!-- HEADER / NAVIGATION (Estilo Oficial) -->
-    <header class="sticky top-0 z-40 bg-white border-b-4 border-etpc-accent shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
-            <a href="https://etpc.pt/" target="_blank" class="flex items-center gap-4 group">
-                <div class="w-14 h-14 bg-etpc-blue text-white rounded-lg flex items-center justify-center font-extrabold text-2xl shadow-md group-hover:bg-etpc-lightBlue transition-all">
-                    E
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="https://etpc.pt/" target="_blank" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 bg-etpc-blue text-white rounded-2xl flex items-center justify-center font-extrabold text-xl shadow-md group-hover:bg-etpc-lightBlue transition-all">
+                    ETPC
                 </div>
                 <div>
-                    <span class="block font-extrabold text-2xl text-etpc-blue leading-none tracking-tight">ETPC</span>
-                    <span class="block text-xs text-slate-500 font-semibold uppercase tracking-widest mt-1">Cantanhede</span>
+                    <span class="block font-bold text-lg text-etpc-darkBlue leading-tight">ETPC Cantanhede</span>
+                    <span class="block text-xs text-slate-500 font-medium">Escola Técnico-Profissional de Cantanhede</span>
                 </div>
             </a>
 
             <!-- Desktop Nav -->
-            <nav class="hidden lg:flex items-center gap-8 font-bold text-sm uppercase tracking-wide text-etpc-blue">
-                <a href="#cursos" class="hover:text-etpc-accent transition-colors flex items-center gap-2"><i class="fa-solid fa-graduation-cap"></i> Cursos</a>
-                <a href="#quiz" class="hover:text-etpc-accent transition-colors flex items-center gap-2"><i class="fa-solid fa-compass"></i> Orientação</a>
-                <a href="#sobre" class="hover:text-etpc-accent transition-colors">Apoios</a>
-                <a href="#contactos" class="hover:text-etpc-accent transition-colors">Contactos</a>
+            <nav class="hidden lg:flex items-center gap-6 font-semibold text-xs uppercase tracking-wider text-slate-600" aria-label="Navegação principal">
+                <a href="#sobre" class="hover:text-etpc-blue transition-colors">A Escola</a>
+                <a href="#cursos" class="hover:text-etpc-blue transition-colors flex items-center gap-1.5"><i class="fa-solid fa-graduation-cap text-etpc-blue"></i> Oferta Formativa</a>
+                <a href="#quiz" class="hover:text-etpc-blue transition-colors flex items-center gap-1.5"><i class="fa-solid fa-compass text-etpc-accent"></i> Orientação</a>
+                <a href="#contactos" class="hover:text-etpc-blue transition-colors">Contactos</a>
             </nav>
+
+            <details class="lg:hidden relative">
+                <summary class="list-none cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl px-3 py-2 text-xs font-bold" aria-label="Abrir menu de navegação">Menu <i class="fa-solid fa-chevron-down ml-1"></i></summary>
+                <div class="absolute right-0 top-12 z-50 min-w-48 bg-white border border-slate-200 rounded-xl shadow-xl p-2 flex flex-col gap-1">
+                    <a href="#sobre" class="px-3 py-2 rounded-lg text-sm hover:bg-slate-50">A Escola</a>
+                    <a href="#cursos" class="px-3 py-2 rounded-lg text-sm hover:bg-slate-50">Oferta Formativa</a>
+                    <a href="#quiz" class="px-3 py-2 rounded-lg text-sm hover:bg-slate-50">Orientação</a>
+                    <a href="#contactos" class="px-3 py-2 rounded-lg text-sm hover:bg-slate-50">Contactos</a>
+                </div>
+            </details>
 
             <!-- Actions -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <button onclick="toggleChat(true)" class="bg-etpc-accent hover:bg-etpc-accentHover text-white text-xs sm:text-sm font-bold px-5 py-3 rounded-md shadow-md hover:shadow-lg transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-robot text-lg"></i>
-                    <span>Falar com IA</span>
+                <button onclick="toggleChat(true)" class="bg-etpc-blue hover:bg-etpc-lightBlue text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-robot text-etpc-accent text-base animate-bounce"></i>
+                    <span>Tutor Virtual ETPC</span>
                 </button>
             </div>
         </div>
     </header>
 
+    <main id="main">
     <!-- HERO SECTION -->
-    <section class="relative bg-etpc-blue text-white py-16 sm:py-24 overflow-hidden">
-        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-etpc-darkBlue to-transparent opacity-50"></div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-12 gap-12 items-center">
+    <section class="relative bg-gradient-to-br from-etpc-darkBlue via-etpc-blue to-blue-900 text-white py-14 sm:py-20 overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:20px_20px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-12 gap-10 items-center">
             
             <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-white/10 border border-white/20 text-xs font-bold text-etpc-accent uppercase tracking-wider backdrop-blur-sm">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-blue-100 backdrop-blur-sm">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    O Teu Futuro Profissional
+                    ETPC · Escola Técnico-Profissional de Cantanhede
                 </div>
-                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-                    Aprende, Pratica e Inova na <span class="text-etpc-accent">ETPC</span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                    O teu sucesso começa aqui, na <span class="text-etpc-accent">ETPC Cantanhede</span>
                 </h1>
                 <p class="text-base sm:text-lg text-blue-100 max-w-2xl font-light leading-relaxed">
-                    A Escola Técnico-Profissional de Cantanhede prepara-te para os desafios do mercado de trabalho com cursos 100% financiados, ferramentas tecnológicas e estágios garantidos.
+                    Conhece a oferta formativa da ETPC, explora diferentes áreas profissionais e descobre percursos que combinam aprendizagem teórica e prática.
                 </p>
 
-                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-6">
-                    <a href="#cursos" class="bg-etpc-accent hover:bg-etpc-accentHover text-white font-bold px-8 py-4 rounded-md shadow-lg transition-all flex items-center gap-2">
+                <!-- Hero Badges -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2 text-xs font-semibold text-white/90">
+                    <span class="bg-white/15 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-1.5"><i class="fa-solid fa-certificate text-etpc-accent"></i> Dupla certificação profissional</span>
+                    <span class="bg-white/15 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-1.5"><i class="fa-solid fa-handshake-angle text-emerald-400"></i> Aprendizagem prática</span>
+                    <span class="bg-white/15 px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-1.5"><i class="fa-solid fa-certificate text-amber-300"></i> Qualificação profissional</span>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#cursos" class="bg-etpc-accent hover:bg-etpc-accentHover text-slate-900 font-bold px-6 py-3.5 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <span>Ver Oferta Formativa</span>
+                        <span>Explorar Cursos da ETPC</span>
+                    </a>
+                    <a href="#quiz" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3.5 rounded-xl border border-white/30 backdrop-blur-sm transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-compass text-etpc-accent"></i>
+                        <span>Fazer Quiz Vocacional</span>
                     </a>
                 </div>
             </div>
 
-            <!-- AI Presentation Card -->
-            <div class="lg:col-span-5 hidden lg:block">
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl relative">
-                    <div class="absolute -top-6 -right-6 w-24 h-24 bg-etpc-accent rounded-full blur-2xl opacity-40 animate-pulse"></div>
-                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
-                        <i class="fa-solid fa-microchip text-etpc-accent"></i> Inteligência Artificial
-                    </h3>
-                    <p class="text-blue-100 text-sm leading-relaxed mb-6">
-                        O nosso assistente virtual não te dá apenas respostas curtas. Pede-lhe para te explicar a fundo o que é <strong>Python</strong>, como funciona a <strong>Contabilidade</strong> ou o que faz um <strong>Técnico de Saúde</strong>!
-                    </p>
-                    <button onclick="askQuickQuestion('O que é Python e C++? Explica-me ao detalhe.')" class="w-full text-left p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/20 text-sm font-medium transition-all flex items-center justify-between group">
-                        <span>"O que é Python e C++?"</span>
-                        <i class="fa-solid fa-chevron-right text-etpc-accent group-hover:translate-x-1 transition-transform"></i>
-                    </button>
+            <!-- Quick AI Interaction Card -->
+            <div class="lg:col-span-5">
+                <div class="bg-white text-slate-800 rounded-3xl shadow-2xl p-6 border border-slate-100 relative overflow-hidden">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-etpc-blue text-white flex items-center justify-center font-bold text-lg shadow-md">
+                                <i class="fa-solid fa-robot text-etpc-accent"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Tutor Virtual ETPC</h3>
+                                <p class="text-xs text-emerald-600 flex items-center gap-1 font-medium">
+                                    <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block animate-ping"></span> Tutor virtual de aprendizagem
+                                </p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] bg-blue-50 text-etpc-blue px-2.5 py-1 rounded-lg font-semibold border border-blue-100">Tutor IA</span>
+                    </div>
+
+                    <div class="py-4 space-y-3">
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Perguntas rápidas ao Assistente:</p>
+                        <div class="space-y-2">
+                            <button onclick="askQuickQuestion('Que cursos existem na área da informática?')" class="w-full text-left p-3 rounded-xl bg-slate-50 hover:bg-blue-50 hover:text-etpc-blue border border-slate-200 text-xs font-medium text-slate-700 transition-all flex items-center justify-between group">
+                                <span>"Que cursos existem na área da informática?"</span>
+                                <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-etpc-blue transition-transform group-hover:translate-x-0.5"></i>
+                            </button>
+                            <button onclick="askQuickQuestion('O que é Python e para que serve?')" class="w-full text-left p-3 rounded-xl bg-slate-50 hover:bg-blue-50 hover:text-etpc-blue border border-slate-200 text-xs font-medium text-slate-700 transition-all flex items-center justify-between group">
+                                <span>"O que é Python e para que serve?"</span>
+                                <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-etpc-blue transition-transform group-hover:translate-x-0.5"></i>
+                            </button>
+                            <button onclick="askQuickQuestion('Qual é a diferença entre C++ e Python?')" class="w-full text-left p-3 rounded-xl bg-slate-50 hover:bg-blue-50 hover:text-etpc-blue border border-slate-200 text-xs font-medium text-slate-700 transition-all flex items-center justify-between group">
+                                <span>"Qual é a diferença entre C++ e Python?"</span>
+                                <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-etpc-blue transition-transform group-hover:translate-x-0.5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button onclick="toggleChat(true)" class="w-full py-3 bg-etpc-blue hover:bg-etpc-lightBlue text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-comments"></i>
+                            <span>Abrir tutor virtual</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- FLOATING CHATBOT WIDGET (O Core da Experiência Profissional) -->
+    <!-- SECTION 1: FILTRO E PESQUISA DE CURSOS DA ETPC -->
+    <section id="cursos" class="py-16 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-xs font-bold text-etpc-blue uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+                    Oferta Formativa Completa ETPC
+                </span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Oferta Formativa da ETPC Cantanhede</h2>
+                <p class="text-sm text-slate-600 mt-2">Filtra por área de interesse ou pesquisa por palavras-chave para encontrar o curso ideal para o teu futuro.</p>
+            </div>
+
+            <!-- Search and Filter Controls -->
+            <div class="space-y-4 mb-10">
+                <div class="max-w-2xl mx-auto relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <label for="courseSearchInput" class="sr-only">Pesquisar cursos por nome, área ou disciplina</label>
+                    <input id="courseSearchInput" oninput="filterCourses()" type="text" placeholder="Pesquisar por nome do curso, disciplinas ou saídas profissionais (Ex: Saúde, Software, Cozinha, Desporto)..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm rounded-2xl pl-11 pr-4 py-3.5 focus:outline-none focus:border-etpc-blue focus:bg-white shadow-sm transition-all">
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-2" id="categoryFilterContainer">
+                    <button onclick="setCategoryFilter('all')" id="catBtn-all" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-etpc-blue text-white border-etpc-blue shadow-sm">
+                        Todos
+                    </button>
+                    <button onclick="setCategoryFilter('Informatica')" id="catBtn-Informatica" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
+                        💻 Informática & Tec.
+                    </button>
+                    <button onclick="setCategoryFilter('Saude')" id="catBtn-Saude" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
+                        🏥 Saúde & Serviço Social
+                    </button>
+                    <button onclick="setCategoryFilter('Restauracao')" id="catBtn-Restauracao" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
+                        🍳 Restauração & Hotelaria
+                    </button>
+                    <button onclick="setCategoryFilter('Gestao')" id="catBtn-Gestao" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
+                        📊 Gestão & Administração
+                    </button>
+                    <button onclick="setCategoryFilter('Desporto')" id="catBtn-Desporto" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
+                        ⚽ Desporto & Segurança
+                    </button>
+                    <button onclick="setCategoryFilter('CEF_Adultos')" id="catBtn-CEF_Adultos" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
+                        🎓 CEFs (9.º Ano) & Adultos
+                    </button>
+                </div>
+            </div>
+
+            <!-- Courses Grid Container -->
+            <div id="coursesGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <!-- Empty State -->
+            <div id="noCoursesFound" class="hidden text-center py-12 bg-slate-50 rounded-3xl border border-slate-200 max-w-xl mx-auto mt-6">
+                <i class="fa-solid fa-circle-question text-4xl text-slate-400 mb-3"></i>
+                <h3 class="font-bold text-slate-800 text-base">Nenhum curso encontrado</h3>
+                <p class="text-xs text-slate-500 mt-1">Tenta alterar o termo de pesquisa ou selecionar outra categoria.</p>
+                <button onclick="resetCourseFilters()" class="mt-4 bg-etpc-blue text-white font-bold px-4 py-2 rounded-xl text-xs">
+                    Ver Todos os Cursos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: QUESTIONÁRIO VOCACIONAL DA ETPC -->
+    <section id="quiz" class="py-16 bg-slate-50 border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-xs font-bold text-etpc-blue uppercase tracking-widest bg-blue-100 px-3 py-1 rounded-full">
+                    <i class="fa-solid fa-compass mr-1"></i> Orientação Vocacional
+                </span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Quiz de Orientação ETPC</h2>
+                <p class="text-sm text-slate-600 mt-2">Responde a 4 perguntas simples e descobre quais os cursos da ETPC que melhor correspondem aos teus interesses!</p>
+            </div>
+
+            <div id="quizCard" class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-md relative overflow-hidden">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-2">
+                        <span id="quizStepText">Pergunta 1 de 4</span>
+                        <span id="quizPercentText">25% Concluído</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                        <div id="quizProgressBar" class="bg-etpc-blue h-2.5 rounded-full transition-all duration-300 w-[25%]"></div>
+                    </div>
+                </div>
+
+                <div id="quizContent" class="space-y-6"></div>
+                <div id="quizResult" class="hidden space-y-6"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: SOBRE A ETPC & VANTAGENS -->
+    <section id="sobre" class="py-16 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-bold text-etpc-blue uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+                    Vantagens ETPC
+                </span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Porquê Escolher a ETPC Cantanhede?</h2>
+                <p class="text-sm text-slate-600 mt-2">Uma escola profissional com ligação ao mundo do trabalho, projetos e percursos em várias áreas de formação.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
+                    <p class="text-3xl font-extrabold text-etpc-blue">2 000</p>
+                    <p class="text-xs text-slate-600 mt-1">Alunos diplomados</p>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
+                    <p class="text-3xl font-extrabold text-etpc-blue">30</p>
+                    <p class="text-xs text-slate-600 mt-1">Anos de existência</p>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
+                    <p class="text-3xl font-extrabold text-etpc-blue">100</p>
+                    <p class="text-xs text-slate-600 mt-1">Empresas parceiras</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 hover:shadow-lg transition-all">
+                    <div class="w-12 h-12 bg-blue-100 text-etpc-blue rounded-2xl flex items-center justify-center text-xl mb-4 font-bold">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Formação prática e ligação ao mercado</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Os cursos profissionais combinam formação em sala, atividades práticas e contacto com contextos reais de trabalho. Consulta o plano de cada curso para conhecer a respetiva componente de FCT.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 hover:shadow-lg transition-all">
+                    <div class="w-12 h-12 bg-amber-100 text-etpc-accent rounded-2xl flex items-center justify-center text-xl mb-4 font-bold">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Formação Profissional</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        A ETPC apresenta percursos de formação profissional em várias áreas. Para conhecer as condições de frequência e eventuais apoios disponíveis, contacta diretamente a escola.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 hover:shadow-lg transition-all">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-xl mb-4 font-bold">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Acesso ao Ensino Superior</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Os cursos profissionais conferem certificação de ensino secundário e qualificação profissional de nível 4. Após a conclusão, podes trabalhar ou prosseguir estudos, de acordo com as condições de acesso em vigor.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: CONTACTOS E LOCALIZAÇÃO -->
+    <section id="contactos" class="py-16 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div>
+                        <span class="text-xs font-bold text-etpc-accent uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full">
+                            Secretaria & Contactos
+                        </span>
+                        <h2 class="text-3xl font-extrabold text-white mt-3">Fala connosco na ETPC</h2>
+                        <p class="text-slate-400 text-sm mt-2">Estamos disponíveis para esclarecer qualquer dúvida sobre cursos, inscrições e visitas à escola.</p>
+                    </div>
+
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 text-etpc-accent flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <strong class="block text-white">Morada Oficial</strong>
+                                Rua Padre Américo, n.º 26, 3060-186 Cantanhede, Portugal
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 text-etpc-accent flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <strong class="block text-white">Telefone da Secretaria</strong>
+                                +351 231 420 344
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 text-etpc-accent flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <strong class="block text-white">Emails</strong>
+                                geral@etpc.pt
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 text-etpc-accent flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <div>
+                                <strong class="block text-white">Website Oficial</strong>
+                                <a href="https://etpc.pt/" target="_blank" class="text-etpc-accent hover:underline">https://etpc.pt/ <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Contact Form Box -->
+                <div class="bg-slate-800/90 p-8 rounded-3xl border border-slate-700 space-y-4">
+                    <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-etpc-accent"></i> Inscrição e Pedido de Informação
+                    </h3>
+                    <p class="text-xs text-slate-400">Preenche os dados e será preparado um email para a secretaria da ETPC.</p>
+                    
+                    <div class="space-y-3">
+                        <label for="contactName" class="sr-only">Nome do aluno ou encarregado de educação</label>
+                        <input id="contactName" type="text" placeholder="Nome do Aluno / Encarregado de Educação" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-etpc-accent">
+                        <label for="contactEmail" class="sr-only">Email de contacto</label>
+                        <input id="contactEmail" type="email" placeholder="Email de contacto" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-etpc-accent">
+                        <label for="contactCourseSelect" class="sr-only">Curso de interesse</label>
+                        <select id="contactCourseSelect" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-etpc-accent">
+                            <option value="">-- Escolha o Curso de Interesse --</option>
+                            <option value="Desenvolvimento de Software (TGPSI)">Desenvolvimento de Software (TGPSI)</option>
+                            <option value="Sistemas de Computação e Redes">Sistemas de Computação e Redes</option>
+                            <option value="Eletrónica e Automação">Eletrónica e Automação</option>
+                            <option value="Auxiliar de Saúde">Auxiliar de Saúde</option>
+                            <option value="Apoio à Intervenção Social">Apoio à Intervenção Social</option>
+                            <option value="Esteticista / Cabeleireiro">Esteticista / Cabeleireiro/a</option>
+                            <option value="Cozinha e Restauração">Cozinha e Restauração</option>
+                            <option value="Gestão e Administração">Gestão e Administração</option>
+                            <option value="Comunicação - Marketing, RP e Publicidade">Comunicação - Marketing, RP e Publicidade</option>
+                            <option value="Desporto / Proteção Civil">Desporto / Proteção Civil</option>
+                            <option value="CEFs / Requalificação de Adultos">CEFs (9.º Ano) / Adultos</option>
+                        </select>
+                        <label for="contactMsg" class="sr-only">Mensagem</label>
+                        <textarea id="contactMsg" rows="3" placeholder="Qual a sua dúvida ou mensagem?" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-etpc-accent"></textarea>
+                        <button onclick="handleContactSubmit()" class="w-full bg-etpc-accent hover:bg-etpc-accentHover text-slate-900 font-extrabold py-3.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
+                            <span>Enviar Mensagem</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 text-slate-400 py-8 text-xs border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <p>© 2026 ETPC - Escola Técnico-Profissional de Cantanhede.</p>
+                <p class="text-slate-600 mt-0.5">Portal informativo de apoio. Confirma dados, inscrições e condições no <a href="https://etpc.pt/" target="_blank" rel="noopener noreferrer" class="underline text-slate-500">site oficial da ETPC</a>.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://etpc.pt/" target="_blank" class="hover:text-white transition-colors">etpc.pt <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FLOATING CHATBOT WIDGET -->
     <div id="chatWidget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-        <button id="chatToggleBtn" onclick="toggleChat()" class="w-16 h-16 rounded-full bg-etpc-blue hover:bg-etpc-lightBlue text-white shadow-2xl flex items-center justify-center text-2xl transition-all transform hover:scale-105 active:scale-95 border-4 border-white relative">
-            <i class="fa-solid fa-comment-dots" id="chatIconOpen"></i>
+        <button id="chatToggleBtn" onclick="toggleChat()" aria-label="Abrir tutor virtual" class="w-16 h-16 rounded-2xl bg-etpc-blue hover:bg-etpc-lightBlue text-white shadow-2xl flex items-center justify-center text-2xl transition-all transform hover:scale-105 active:scale-95 border-2 border-white/20 relative">
+            <i class="fa-solid fa-robot text-etpc-accent" id="chatIconOpen"></i>
             <i class="fa-solid fa-xmark hidden" id="chatIconClose"></i>
-            <span class="absolute top-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></span>
+            <span class="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></span>
         </button>
 
-        <!-- Chat Box -->
-        <div id="chatBox" class="hidden w-[92vw] sm:w-[450px] h-[650px] max-h-[85vh] bg-white rounded-2xl shadow-2xl border border-slate-200 flex-col overflow-hidden mb-4 transition-all duration-300">
-            
-            <!-- Chat Header Profissional -->
-            <div class="bg-etpc-blue text-white p-5 flex flex-col gap-1 shadow-md relative overflow-hidden">
-                <div class="absolute right-0 top-0 w-32 h-32 bg-etpc-lightBlue rounded-full blur-3xl opacity-50"></div>
-                <div class="flex items-center justify-between relative z-10">
+        <div id="chatBox" class="hidden w-[94vw] sm:w-[520px] h-[min(760px,86vh)] max-h-[86vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex-col overflow-hidden mb-4 transition-all duration-300">
+            <div class="bg-etpc-darkBlue text-white p-4 flex flex-col gap-2 shadow-md">
+                <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-etpc-blue font-bold text-xl shadow-inner">
+                        <div class="w-10 h-10 rounded-2xl bg-etpc-blue flex items-center justify-center text-etpc-accent font-bold text-lg border border-white/10">
                             <i class="fa-solid fa-robot"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-base leading-tight">Assistente IA ETPC</h3>
-                            <span class="text-xs text-blue-200 flex items-center gap-1.5 mt-0.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Online & Especialista
+                            <h3 class="font-bold text-sm leading-tight">Tutor Virtual ETPC</h3>
+                            <span class="text-[10px] text-blue-200 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Assistente de aprendizagem
                             </span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="clearChatHistory()" title="Limpar conversa" class="text-white/70 hover:text-white text-sm p-2 rounded-md hover:bg-white/10 transition-colors">
-                            <i class="fa-solid fa-broom"></i>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="clearChatHistory()" title="Iniciar nova conversa" aria-label="Iniciar nova conversa" class="text-white/80 hover:text-white text-xs p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+                            <i class="fa-solid fa-trash-can"></i>
                         </button>
-                        <button onclick="toggleChat(false)" class="text-white/70 hover:text-white text-xl p-2 rounded-md hover:bg-white/10 transition-colors">
+                        <button onclick="toggleChat(false)" aria-label="Fechar tutor virtual" title="Fechar tutor virtual" class="text-white/80 hover:text-white text-base p-1.5 rounded-lg hover:bg-white/10 transition-colors">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Quick Chips Bar (Sugestões Inteligentes) -->
-            <div id="quickChipsBar" class="p-3 border-b border-slate-100 bg-slate-50 overflow-x-auto flex gap-2 text-xs whitespace-nowrap custom-scroll">
-                <button onclick="askQuickQuestion('Podes explicar-me detalhadamente o que é Python e C++?')" class="bg-white hover:bg-etpc-blue hover:text-white text-etpc-blue px-3 py-1.5 rounded-full border border-etpc-blue/30 transition-colors shadow-sm font-medium">
-                    🐍 O que é Python/C++?
-                </button>
-                <button onclick="askQuickQuestion('Como funciona a área de Saúde e que técnicas aprendo?')" class="bg-white hover:bg-etpc-blue hover:text-white text-etpc-blue px-3 py-1.5 rounded-full border border-etpc-blue/30 transition-colors shadow-sm font-medium">
-                    🏥 Área da Saúde
-                </button>
-                <button onclick="askQuickQuestion('Quais são as regras dos apoios e estágios FCT?')" class="bg-white hover:bg-etpc-blue hover:text-white text-etpc-blue px-3 py-1.5 rounded-full border border-etpc-blue/30 transition-colors shadow-sm font-medium">
-                    💼 Estágios e Apoios
-                </button>
-            </div>
-
             <!-- Messages Area -->
-            <div id="chatMessages" class="flex-1 p-5 overflow-y-auto space-y-5 text-sm custom-scroll bg-white">
-                <div class="flex gap-3 items-start">
-                    <div class="w-8 h-8 rounded-full bg-etpc-accent text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-md mt-1">
-                        <i class="fa-solid fa-robot"></i>
+            <div id="chatMessages" role="log" aria-live="polite" aria-relevant="additions" aria-label="Conversa com o tutor virtual" class="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 text-sm custom-scroll bg-slate-50">
+                <div class="flex gap-2.5 items-start">
+                    <div class="w-8 h-8 rounded-full bg-etpc-blue text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-sm">
+                        <i class="fa-solid fa-robot text-etpc-accent"></i>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl rounded-tl-none border border-slate-200 text-slate-800 shadow-sm space-y-2 max-w-[85%] leading-relaxed ai-response">
-                        <p>Olá! 👋 Bem-vindo ao portal da <strong>ETPC</strong>.</p>
-                        <p>Sou uma Inteligência Artificial desenvolvida para ser o teu guia profissional. Podes pedir-me explicações complexas, como por exemplo:</p>
-                        <ul>
-                            <li>O que é <em>C++</em> ou <em>Python</em>?</li>
-                            <li>Como é o dia a dia num laboratório de Cozinha?</li>
-                            <li>Como funciona a Contabilidade numa empresa?</li>
-                        </ul>
-                        <p>Como te posso ajudar a descobrir a tua vocação hoje?</p>
+                    <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 text-slate-800 shadow-sm space-y-2 max-w-[85%] leading-relaxed">
+                        <p>Olá! Sou o <strong>Tutor Virtual</strong> deste portal.</p>
+                        <p>Podes fazer perguntas sobre programação (Python, C++, C#, JavaScript, HTML e CSS), bases de dados, redes, matemática, tecnologia ou outros temas. Também posso esclarecer dúvidas sobre a oferta formativa da ETPC.</p>
+                        <p>Explico os assuntos passo a passo, com exemplos e código quando for útil. Por onde começamos?</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Sugestões de perguntas -->
+            <div id="quickChipsBar" class="p-2 border-t border-slate-200 bg-white overflow-x-auto flex gap-1.5 text-[11px] whitespace-nowrap custom-scroll" aria-label="Sugestões de perguntas">
+                <button type="button" onclick="askQuickQuestion('Explica-me o que é Python, para que serve e mostra um exemplo simples.')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">🐍 Aprender Python</button>
+                <button type="button" onclick="askQuickQuestion('Qual é a diferença entre C++ e Python? Compara as duas linguagens com exemplos.')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors"> C++ vs Python</button>
+                <button type="button" onclick="askQuickQuestion('Explica HTML e CSS como se eu estivesse a começar a aprender desenvolvimento web.')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">🌐 HTML e CSS</button>
+                <button type="button" onclick="askQuickQuestion('Fala-me sobre o curso de Técnico/a de Desenvolvimento de Software da ETPC.')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">🎓 Curso de Software</button>
+            </div>
+
             <!-- Input Area -->
-            <div class="p-4 bg-slate-50 border-t border-slate-200">
+            <div class="p-3 bg-white border-t border-slate-200">
                 <form id="chatForm" onsubmit="handleUserSubmit(event)" class="flex items-center gap-2">
-                    <input id="chatInput" type="text" placeholder="Faz a tua pergunta (ex: Explica-me HTML)..." autocomplete="off" class="flex-1 bg-white text-slate-800 text-sm rounded-lg px-4 py-3 border border-slate-300 focus:outline-none focus:border-etpc-blue focus:ring-2 focus:ring-etpc-blue/20 transition-all shadow-sm">
-                    <button type="submit" id="sendBtn" class="bg-etpc-blue hover:bg-etpc-lightBlue text-white p-3 rounded-lg shadow-md transition-colors flex items-center justify-center w-12 h-12 shrink-0">
-                        <i class="fa-solid fa-paper-plane"></i>
+                    <input id="chatInput" type="text" aria-label="Escreve a tua pergunta" placeholder="Escreve uma pergunta..." autocomplete="off" maxlength="2000" class="flex-1 bg-slate-100 text-slate-800 text-xs rounded-xl px-3.5 py-3 border border-slate-200 focus:outline-none focus:border-etpc-blue focus:bg-white transition-all">
+                    <button type="submit" id="sendBtn" aria-label="Enviar pergunta" class="bg-etpc-blue hover:bg-etpc-lightBlue text-white p-3 rounded-xl shadow transition-colors flex items-center justify-center w-11 h-11 shrink-0">
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
                     </button>
                 </form>
+                <p class="mt-2 px-1 text-[10px] leading-relaxed text-slate-500">Evita partilhar dados pessoais. As respostas são geradas por IA e podem precisar de confirmação. Informação oficial da escola: <a href="https://etpc.pt/" target="_blank" rel="noopener noreferrer" class="font-semibold text-etpc-blue hover:underline">etpc.pt</a>.</p>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT APP LOGIC & IA ENGINE -->
+    <!-- JAVASCRIPT APP LOGIC & DATA -->
     <script>
-        // --------------------------------------------------------
-        // ENGINE IA - FORMATADOR DE TEXTO (MARKDOWN PARA HTML)
-        // --------------------------------------------------------
-        function formatBotResponse(text) {
-            let formatted = text
-                // Negrito
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                // Itálico
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                // Títulos (###)
-                .replace(/### (.*?)(?:\n|$)/g, '<h4 class="text-etpc-blue font-bold text-base mt-3 mb-1 border-b border-slate-200 pb-1">$1</h4>')
-                // Títulos (##)
-                .replace(/## (.*?)(?:\n|$)/g, '<h3 class="text-etpc-blue font-extrabold text-lg mt-4 mb-2">$1</h3>')
-                // Listas com travessão ou asterisco
-                .replace(/^[-\*]\s+(.*)$/gm, '<li>$1</li>')
-                // Substituir blocos de <li> seguidos por <ul>
-                .replace(/(<li>.*<\/li>(?:\n<li>.*<\/li>)*)/g, '<ul class="list-disc pl-5 my-2 space-y-1 text-slate-700">$1</ul>')
-                // Parágrafos e quebras de linha
-                .replace(/\n\n/g, '</p><p class="mb-3 text-slate-700 leading-relaxed">')
-                // Links
-                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="text-etpc-accent hover:text-etpc-accentHover font-bold inline-flex items-center gap-1">$1 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>');
-            
-            // Envolver tudo no parágrafo inicial se não começar por tags HTML de bloco
-            if (!formatted.startsWith('<')) {
-                formatted = `<p class="mb-3 text-slate-700 leading-relaxed">${formatted}`;
+        // 1. BASE DE DADOS COMPLETA DA ETPC
+        const ETPC_COURSES_DATA = [
+            {
+                id: "tgpsi",
+                category: "Informatica",
+                categoryLabel: "Informática & Tecnologia",
+                badgeClass: "bg-blue-100 text-etpc-blue",
+                title: "Técnico/a de Desenvolvimento de Software",
+                desc: "Formação completa na criação de aplicações informáticas, programação (C#, Python, Java), desenvolvimento de páginas web dinâmicas e bases de dados SQL.",
+                modules: ["Programação C#, Python e Java", "Desenvolvimento Web (HTML, CSS, JS)", "Bases de Dados SQL & Modelação"],
+                careers: "Programador de Software, Developer Web, Gestor de Bases de Dados, Engenharia Informática.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/pt/tecnicoa-de-desenvolvimento-de-software"
+            },
+            {
+                id: "sistemas-redes",
+                category: "Informatica",
+                categoryLabel: "Informática & Tecnologia",
+                badgeClass: "bg-blue-100 text-etpc-blue",
+                title: "Técnico/a de Sistemas de Computação e Redes",
+                desc: "Montagem e manutenção de hardware, administração e configuração de redes de dados, servidores Windows/Linux e introdução à cibersegurança.",
+                modules: ["Montagem e Reparação de Hardware", "Redes de Comunicação & Routers Cisco", "Administração de Servidores e Segurança"],
+                careers: "Técnico de Suporte IT, Administrador de Redes, Técnico de Hardware e Datacenters.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/tecnicoa-de-sistemas-de-computacao-e-redes"
+            },
+            {
+                id: "eletronica-automacao",
+                category: "Informatica",
+                categoryLabel: "Informática & Tecnologia",
+                badgeClass: "bg-blue-100 text-etpc-blue",
+                title: "Técnico/a de Eletrónica e Automação",
+                desc: "Combinação de eletrónica digital, microcontroladores, robótica e automação. Aprendizagem prática na programação de autómatos e manutenção de sistemas eletrónicos.",
+                modules: ["Eletrónica Analógica e Digital", "Programação de Microcontroladores / Arduino", "Automação e Controlo Industrial"],
+                careers: "Técnico de Eletrónica, Programador de Autómatos, Manutenção de Equipamentos Informáticos.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/pt/tecnicoa-de-eletronica-e-automacao"
+            },
+            {
+                id: "auxiliar-saude",
+                category: "Saude",
+                categoryLabel: "Saúde & Serviços Sociais",
+                badgeClass: "bg-emerald-100 text-emerald-800",
+                title: "Técnico/a Auxiliar de Saúde",
+                desc: "Capacita para prestar apoio em hospitais, clínicas, lares e unidades de cuidados continuados, sob a orientação de profissionais de enfermagem e saúde.",
+                modules: ["Prestação de Cuidados de Saúde e Higiene", "Primeiros Socorros e Ergonomia", "Organização de Unidades de Saúde"],
+                careers: "Auxiliar em Hospitais, Clínicas Médicas, Unidades de Geriatria e Cuidados Continuados.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "apoio-social",
+                category: "Saude",
+                categoryLabel: "Saúde & Serviços Sociais",
+                badgeClass: "bg-emerald-100 text-emerald-800",
+                title: "Técnico/a de Apoio à Intervenção Social",
+                desc: "Intervenção e acompanhamento de crianças, jovens, idosos e populações em situação de vulnerabilidade em instituições comunitárias e de solidariedade.",
+                modules: ["Psicologia e Sociologia Comunitária", "Animação de Grupos e Desenvolvimento Comunitário", "Acompanhamento Social e Familiar"],
+                careers: "Técnico Social em IPSS, Centros de Dia, Lares, Câmaras Municipais e Projetos Comunitários.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "esteticista",
+                category: "Saude",
+                categoryLabel: "Saúde & Serviços Sociais",
+                badgeClass: "bg-emerald-100 text-emerald-800",
+                title: "Esteticista",
+                desc: "Cuidados estéticos faciais e corporais, maquilhagem profissional, manicure/pedicure, cosmetologia e gestão de espaços de estética e bem-estar.",
+                modules: ["Tratamentos Rosto e Corpo", "Cosmetologia e Anatomia da Pele", "Maquilhagem, Unhas e Cuidados Estéticos"],
+                careers: "Esteticista em Gabinetes de Beleza, SPAs, Clínicas Estéticas e Consultoria de Imagem.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "cabeleireiro",
+                category: "Saude",
+                categoryLabel: "Saúde & Serviços Sociais",
+                badgeClass: "bg-emerald-100 text-emerald-800",
+                title: "Cabeleireiro/a",
+                desc: "Técnicas de corte, coloração, penteados e tratamentos capilares masculinos e femininos, atendimento ao cliente e gestão de barbearia/salão.",
+                modules: ["Técnicas de Corte e Styling", "Colorimetria e Tratamentos Capilares", "Gestão e Atendimento em Salão"],
+                careers: "Cabeleireiro/a Profissional, Barbeiro/a, Estilista Capilar em Televisão e Moda.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "cozinha-pastelaria",
+                category: "Restauracao",
+                categoryLabel: "Restauração & Hotelaria",
+                badgeClass: "bg-amber-100 text-amber-800",
+                title: "Técnico/a de Cozinha e Restauração",
+                desc: "Planeamento e confeção de refeições tradicionais e internacionais, pastelaria fina, controlo de higiene e segurança alimentar (HACCP) e gestão de cozinha.",
+                modules: ["Técnicas Culinárias Avançadas", "Pastelaria e Sobremesas", "Segurança Alimentar HACCP e Gestão de Stocks"],
+                careers: "Cozinheiro/a, Pastelista, Chef de Cozinha em Hotéis, Restaurantes e Catering.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "contabilidade",
+                category: "Gestao",
+                categoryLabel: "Gestão & Administração",
+                badgeClass: "bg-purple-100 text-purple-800",
+                title: "Técnico/a de Gestão e Administração",
+                desc: "Organização de processos administrativos, apoio à gestão, acompanhamento de atividades empresariais e utilização de ferramentas de gestão.",
+                modules: ["Gestão e Organização Empresarial", "Gestão Administrativa", "Ferramentas Digitais de Gestão"],
+                careers: "Assistente de gestão, apoio administrativo e funções de organização empresarial.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "comunicacao-marketing",
+                category: "Gestao",
+                categoryLabel: "Gestão & Administração",
+                badgeClass: "bg-purple-100 text-purple-800",
+                title: "Técnico/a de Comunicação - Marketing, Relações Públicas e Publicidade",
+                desc: "Criação de campanhas publicitárias, gestão de redes sociais (Social Media), relações públicas, assessoria de imprensa e estratégias de marketing digital.",
+                modules: ["Marketing Digital e Redes Sociais", "Publicidade e Design de Comunicação", "Relações Públicas e Eventos"],
+                careers: "Gestor de Redes Sociais, Assistente de Marketing, Gestor de Eventos e Relações Públicas.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "desporto",
+                category: "Desporto",
+                categoryLabel: "Desporto & Segurança",
+                badgeClass: "bg-rose-100 text-rose-800",
+                title: "Técnico/a de Desporto",
+                desc: "Apoio no planeamento e condução de atividades desportivas, treino de modalidades individuais e coletivas, gestão de ginásios e eventos de lazer.",
+                modules: ["Anatomia, Fisiologia e Nutrição No Desporto", "Organização de Eventos Desportivos", "Treino e Animação Desportiva"],
+                careers: "Monitor de Ginásio/Fitness, Técnico de Modalidades Desportivas, Animador Sociodesportivo.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "protecao-civil",
+                category: "Desporto",
+                categoryLabel: "Desporto & Segurança",
+                badgeClass: "bg-rose-100 text-rose-800",
+                title: "Técnico/a de Proteção Civil",
+                desc: "Prevenção de riscos, apoio no planeamento de emergência, socorrismo, segurança contra incêndios e colaboração com forças de proteção e resgate.",
+                modules: ["Planeamento de Emergência e Riscos", "Socorrismo e Suporte Básico de Vida", "Segurança contra Incêndios e Logística"],
+                careers: "Técnico de Proteção Civil Municipal, Apoio a Corporações de Bombeiros e Serviços de Emergência.",
+                level: "12.º Ano | Nível 4 QNQ",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "cef-cozinheiro",
+                category: "CEF_Adultos",
+                categoryLabel: "CEFs & Adultos",
+                badgeClass: "bg-indigo-100 text-indigo-800",
+                title: "CEF - Cozinheiro/a (9.º Ano)",
+                desc: "Curso de Educação e Formação para jovens que pretendem concluir o 9.º ano com uma qualificação profissional prática e entrada rápida na restauração.",
+                modules: ["Preparação e Confeção de Alimentos", "Higiene e Segurança no Trabalho", "Componente Sociocultural e Prática"],
+                careers: "Ajudante de Cozinha, Entrada no Mercado ou Prosseguimento para Curso Profissional (10.º ano).",
+                level: "Equivalência ao 9.º Ano | Certificação Nível 2",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "cef-informatica",
+                category: "CEF_Adultos",
+                categoryLabel: "CEFs & Adultos",
+                badgeClass: "bg-indigo-100 text-indigo-800",
+                title: "CEF - Operador/a de Informática (9.º Ano)",
+                desc: "Conclusão do 9.º ano através do domínio de ferramentas de informática de escritório, processamento de texto, folhas de cálculo e instalação de programas.",
+                modules: ["Processamento de Texto e Folhas de Cálculo", "Internet e Utilitários", "Hardware Básico e Periféricos"],
+                careers: "Operador de Informática, Apoio Administrativo, Conclusão da Escolaridade Obrigatória.",
+                level: "Equivalência ao 9.º Ano | Certificação Nível 2",
+                link: "https://etpc.pt/"
+            },
+            {
+                id: "cursos-adultos",
+                category: "CEF_Adultos",
+                categoryLabel: "CEFs & Adultos",
+                badgeClass: "bg-indigo-100 text-indigo-800",
+                title: "Cursos de (Re)Qualificação de Adultos / EFA",
+                desc: "Cursos de Educação e Formação de Adultos orientados para trabalhadores e desempregados que procuram certificar escolaridade (9.º ou 12.º ano) ou reconverter a carreira.",
+                modules: ["Acreditação de Competências", "Formação Prática em Várias Áreas", "Módulos Flexíveis Pós-Laboral/Laboral"],
+                careers: "Certificação Escolar e Profissional, Progressão na Carreira e Requalificação Laboral.",
+                level: "Certificação de Nível 2, 3 ou 4 conforme percurso",
+                link: "https://etpc.pt/"
             }
-            if (!formatted.endsWith('>')) {
-                formatted += `</p>`;
+        ];
+
+        let currentActiveCategory = 'all';
+
+        // 2. RENDERING E FILTROS DE CURSOS
+        function renderCourses(coursesToRender) {
+            const grid = document.getElementById('coursesGrid');
+            const noResults = document.getElementById('noCoursesFound');
+
+            if (!coursesToRender || coursesToRender.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
             }
 
-            // Cleanup empty tags
-            formatted = formatted.replace(/<p[^>]*>\s*<\/p>/g, '');
+            noResults.classList.add('hidden');
+            grid.innerHTML = coursesToRender.map(course => `
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="text-[11px] font-extrabold ${course.badgeClass} px-3 py-1 rounded-full uppercase tracking-wider">
+                                ${course.categoryLabel}
+                            </span>
+                            <span class="text-[10px] text-slate-400 font-mono">${course.level.split('|')[0]}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-etpc-blue transition-colors mb-2 leading-snug">
+                            ${course.title}
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            ${course.desc}
+                        </p>
 
-            return formatted;
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 mb-4 space-y-1 text-xs text-slate-600">
+                            <div class="font-bold text-slate-800 text-[11px] flex items-center gap-1">
+                                <i class="fa-solid fa-book-open text-etpc-accent"></i> Módulos Principais:
+                            </div>
+                            <ul class="space-y-1 pt-1 text-[11px]">
+                                ${course.modules.map(m => `<li>• ${m}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 space-y-3">
+                        <div class="text-[11px] text-slate-500">
+                            <strong class="text-slate-700">Saídas:</strong> ${course.careers}
+                        </div>
+                        <div class="flex items-center justify-between gap-2 pt-1">
+                            <button onclick="askQuickQuestion('Falam-me mais sobre o curso: ${course.title}')" class="text-xs font-bold text-etpc-blue hover:text-etpc-lightBlue flex items-center gap-1">
+                                <span>Perguntar à IA</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <a href="${course.link}" target="_blank" class="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> etpc.pt
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // --------------------------------------------------------
-        // ENGINE IA - BASE DE CONHECIMENTO E RESPOSTAS ANALÍTICAS
-        // --------------------------------------------------------
-        function processSmartResponse(query) {
-            const q = query.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-            // 1. CUMPRIMENTOS E SMALL TALK
-            if (q.match(/\b(ola|olá|boas|bom dia|boa tarde|boa noite|tudo bem|como estas)\b/)) {
-                return "Olá! 👋 É um enorme gosto falar contigo! \n\nSou a **Inteligência Artificial da ETPC** (Escola Técnico-Profissional de Cantanhede) e estou preparada para responder a **qualquer dúvida** que tenhas sobre os nossos cursos, tecnologias que ensinamos ou funcionamento da escola.\n\nPodes testar-me! Pergunta-me:\n- *O que faz um programador Python?*\n- *Como funciona o estágio de Estética?*\n- *Que apoios financeiros existem?*";
-            }
-
-            // 2. EXPLICAÇÕES PROFUNDAS - PROGRAMAÇÃO E IT (Python, C++, Java, etc)
-            if (q.match(/\b(python|c\+\+|java|c#|sql|html|css|javascript|programacao|software|codigo)\b/)) {
-                return "## O Mundo da Programação e Software 💻\n\nExcelente pergunta! As linguagens de programação são a base de toda a tecnologia moderna. Na ETPC, preparamos-te exatamente para dominares estas ferramentas.\n\n### O que são e para que servem?\n- **Python**: É uma linguagem incrivelmente popular e fácil de ler. É muito usada para Inteligência Artificial, Ciência de Dados e criação de sistemas web avançados.\n- **C++ e C#**: São linguagens extremamente potentes. O **C#** (lê-se C-Sharp) é muito usado para criar jogos (com Unity) e software empresarial sólido. O **C++** é a espinha dorsal de sistemas operativos e motores gráficos pesados.\n- **HTML, CSS e JavaScript**: São o trio maravilha da Web. Tudo o que vês num site (incluindo as cores e a interatividade deste chat) é construído com elas!\n- **SQL**: É a linguagem das Bases de Dados. Permite guardar, procurar e gerir milhões de informações instantaneamente (como os registos do Spotify ou Netflix).\n\n### Como aprendes isto na ETPC?\nNo nosso curso de **Técnico/a de Desenvolvimento de Software (TGPSI)**, vais aprender tudo isto **do zero**, com projetos práticos e laboratórios equipados. E no final, terás um estágio de 420h numa empresa de tecnologia para aplicares o que aprendeste!\n\nFicaste curioso sobre mais alguma linguagem ou tecnologia?";
-            }
-            
-            // 3. EXPLICAÇÕES PROFUNDAS - SAÚDE E ESTÉTICA
-            if (q.match(/\b(saude|enfermagem|anatomia|estetica|pele|maquilhagem|idosos|cuidados)\b/)) {
-                return "## Área da Saúde, Bem-Estar e Apoio Social 🏥\n\nA área da saúde e bem-estar requer técnica, rigor e enorme empatia. Na ETPC, formamos profissionais altamente qualificados para o setor.\n\n### O que aprendes ao detalhe?\n- **Anatomia e Fisiologia**: Nos cursos de Saúde, vais estudar profundamente como o corpo humano funciona, os sistemas orgânicos e protocolos vitais.\n- **Primeiros Socorros e Triagem**: Aprenderás suporte básico de vida, como agir em emergências e apoiar equipas de enfermagem em contexto hospitalar.\n- **Cosmetologia e Dermatologia**: No curso de **Esteticista**, não aprendes só a embelezar; aprendes a ciência da pele (tipos de pele, tratamentos dermatológicos, reações químicas dos cosméticos).\n- **Psicologia Comunitária**: No curso de Intervenção Social, vais estudar técnicas para compreender e apoiar crianças, jovens e idosos em situação de vulnerabilidade.\n\n### Saídas Profissionais\nOs nossos alunos têm elevada taxa de empregabilidade em Hospitais, Clínicas, IPSS, Centros de Dia e SPAs de luxo.\n\nGostavas de saber mais sobre algum destes cursos específicos?";
-            }
-
-            // 4. EXPLICAÇÕES PROFUNDAS - RESTAURAÇÃO E HOTELARIA
-            if (q.match(/\b(cozinha|comida|pastelaria|restaurante|bar|cocktail|haccp|chef)\b/)) {
-                return "## A Arte da Cozinha e Restauração 🍳\n\nTrabalhar em Restauração não é apenas cozinhar, é uma ciência e uma arte de precisão!\n\n### Conceitos Técnicos que vais dominar:\n- **Higiene e Segurança (HACCP)**: É o sistema rigoroso de controlo alimentar. Vais aprender sobre contaminação cruzada, temperaturas de conservação e microbiologia alimentar.\n- **Técnicas de Fogo e Corte**: Desde os cortes clássicos franceses (Julienne, Brunoise) até técnicas de confeção avançadas como *Sous-vide* (cozedura a vácuo a baixa temperatura).\n- **Mixologia**: No curso de Restaurante-Bar, a criação de cocktails envolve química pura — entender densidades, perfis de sabor e infusões para criar a bebida perfeita.\n- **Pastelaria Fina**: Requer matemática e precisão absolutas no peso dos ingredientes para reações perfeitas no forno.\n\n### Formação Prática\nAs aulas decorrem em cozinhas e laboratórios industriais equipados a rigor, e o estágio final (FCT) é feito nos melhores hotéis e restaurantes.\n\nQuerias ser Chef ou dominar a área de Bar?";
-            }
-
-            // 5. EXPLICAÇÕES PROFUNDAS - GESTÃO E MARKETING
-            if (q.match(/\b(contabilidade|marketing|impostos|iva|redes sociais|publicidade|negocios|empresa)\b/)) {
-                return "## Gestão Empresarial e Marketing 📊\n\nNenhuma empresa sobrevive sem contas certas e clientes interessados. A ETPC prepara-te para os bastidores dos negócios!\n\n### Temas Específicos:\n- **Contabilidade Financeira**: Vais dominar o SNC (Sistema de Normalização Contabilística). Entender o que são Débitos, Créditos, Balanços, Demonstração de Resultados e como se apuram os impostos (IVA, IRC).\n- **Legislação Laboral**: Como se processam salários, férias, subsídios e contratos de trabalho.\n- **Marketing Digital e Social Media**: Não é só fazer posts. É criar estratégias de comunicação, análise de métricas (ROI, Engajamento), SEO (Otimização de motores de busca) e publicidade direcionada.\n- **Relações Públicas**: Como gerir crises de imagem, organizar eventos empresariais e falar para o público.\n\nEstas áreas oferecem **emprego em qualquer setor de atividade**, pois todas as empresas precisam de gestores e comunicadores.";
-            }
-
-            // 6. REGRAS DA ETPC - APOIOS, ESTÁGIOS E SUBSÍDIOS
-            if (q.match(/\b(apoio|apoios|subsidio|subsidios|gratis|gratuito|pago|propinas|transporte|passe|alimentacao|bolsa|estagio|fct)\b/)) {
-                return "## Benefícios, Apoios Sociais e Estágios (FCT) 💰\n\nA ETPC orgulha-se de promover um ensino inclusivo e orientado para o mercado de trabalho.\n\n### Cursos 100% Gratuitos\nNão pagas matrícula nem mensalidades. Os nossos cursos profissionais (Nível 4) são cofinanciados pelo Estado e União Europeia.\n\n### Apoios Financeiros ao Aluno\n- **Subsídio de Alimentação**: Atribuído por cada dia efetivo de aulas ou estágio.\n- **Transporte Escolar**: Apoio para a deslocação entre a tua área de residência e Cantanhede.\n- **Bolsa de Material e Bolsa de Mérito**: Acessíveis a alunos consoante o escalão do abono de família e desempenho escolar.\n\n### Formação em Contexto de Trabalho (FCT)\n- O **Estágio (FCT)** tem a duração de **420 horas** (aproximadamente 3 meses).\n- É realizado em contexto real, nas melhores empresas e instituições da região de Cantanhede e Coimbra.\n- Muito frequentemente, **os alunos são convidados a assinar contrato** pela empresa onde estagiaram mal acabam o curso!\n\nMais informações na secretaria ou em [Site Oficial ETPC](https://etpc.pt/).";
-            }
-
-            // 7. CONTACTOS
-            if (q.match(/\b(contacto|contactos|telefone|email|morada|localizacao|secretaria|inscrever|matricula)\b/)) {
-                return "## Contactos e Inscrições na ETPC 📞\n\nFalar connosco é simples. Se pretendes inscrever-te ou agendar uma visita guiada à escola, utiliza os meios oficiais:\n\n- **📍 Morada**: Rua da Escola Tecnológica, 3060-184 Cantanhede\n- **☎️ Telefone**: +351 231 410 120 (Rede fixa nacional)\n- **✉️ E-mail**: secretaria@etpc.pt\n- **🌐 Website**: [https://etpc.pt/](https://etpc.pt/)\n\nO nosso horário de atendimento é das **08h30 às 17h30**, de segunda a sexta-feira.";
-            }
-
-            // 8. CATCH-ALL GENÉRICO INTELIGENTE E INTERATIVO (Para qualquer outra pergunta não coberta acima)
-            return "## Muito interessante! 🤔\n\nNa ETPC, valorizamos muito a curiosidade. O nosso modelo de ensino foca-se exatamente em dar-te as **bases técnicas** para compreenderes como as coisas funcionam a fundo, quer estejamos a falar de robótica, biologia humana, economia ou nutrição.\n\nPara te poder dar uma resposta super detalhada, **podes ser um pouco mais específico?** \n- Queres saber sobre a tecnologia/ciência em si?\n- Ou queres saber em que Curso Profissional da ETPC podes aprender sobre isso?\n\nEstou aqui para te explicar tudo!";
+        function filterCourses() {
+            const searchTerm = document.getElementById('courseSearchInput').value.toLowerCase().trim();
+            let filtered = ETPC_COURSES_DATA.filter(c => {
+                const matchCategory = (currentActiveCategory === 'all') || (c.category === currentActiveCategory);
+                const fullText = (c.title + " " + c.desc + " " + c.modules.join(" ") + " " + c.careers + " " + c.categoryLabel).toLowerCase();
+                const matchSearch = !searchTerm || fullText.includes(searchTerm);
+                return matchCategory && matchSearch;
+            });
+            renderCourses(filtered);
         }
 
-        // --------------------------------------------------------
-        // LÓGICA DE INTERFACE DO CHAT
-        // --------------------------------------------------------
+        function setCategoryFilter(cat) {
+            currentActiveCategory = cat;
+            const categories = ['all', 'Informatica', 'Saude', 'Restauracao', 'Gestao', 'Desporto', 'CEF_Adultos'];
+            categories.forEach(c => {
+                const btn = document.getElementById(`catBtn-${c}`);
+                if (btn) {
+                    if (c === cat) {
+                        btn.className = "px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-etpc-blue text-white border-etpc-blue shadow-sm";
+                    } else {
+                        btn.className = "px-4 py-2 rounded-xl text-xs font-bold border transition-all bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200";
+                    }
+                }
+            });
+            filterCourses();
+        }
+
+        function resetCourseFilters() {
+            document.getElementById('courseSearchInput').value = '';
+            setCategoryFilter('all');
+        }
+
+        // 3. QUIZ VOCACIONAL
+        const QUIZ_QUESTIONS = [
+            {
+                question: "1. Qual destas áreas de trabalho desperta mais o teu interesse?",
+                options: [
+                    { text: "Tecnologia, desenvolvimento de software, computadores ou eletrónica", category: "Informatica" },
+                    { text: "Cuidar de pessoas, saúde, apoio social, beleza e estética", category: "Saude" },
+                    { text: "Cozinhar, gastronomia, restauração e cocktails", category: "Restauracao" },
+                    { text: "Gestão, negócios, publicidade, redes sociais e desporto", category: "Gestao" }
+                ]
+            },
+            {
+                question: "2. Como gostas mais de aprender e trabalhar no dia a dia?",
+                options: [
+                    { text: "A resolver problemas de lógica, criar código ou montar hardware", category: "Informatica" },
+                    { text: "A prestar assistência direta e ajudar no bem-estar das pessoas", category: "Saude" },
+                    { text: "A preparar refeições, sobremesas ou atender clientes em sala/bar", category: "Restauracao" },
+                    { text: "A organizar eventos, gerir redes sociais ou dinamizar atividades físicas", category: "Gestao" }
+                ]
+            },
+            {
+                question: "3. Qual destas frases melhor descreve o teu futuro ideal?",
+                options: [
+                    { text: "\"Quero trabalhar em programação ou empresas de tecnologia!\"", category: "Informatica" },
+                    { text: "\"Quero trabalhar em hospitais, clínicas, lares ou gabinetes de estética!\"", category: "Saude" },
+                    { text: "\"Quero ser Chef de cozinha, pastelista ou gerir restaurantes!\"", category: "Restauracao" },
+                    { text: "\"Quero trabalhar com marketing digital, empresas ou no desporto!\"", category: "Gestao" }
+                ]
+            },
+            {
+                question: "4. Qual a tua situação escolar atual?",
+                options: [
+                    { text: "Estou a concluir o 9.º ano e quero um curso profissional (12.º ano + Nível 4)", category: "Informatica" },
+                    { text: "Quero um curso que combine teoria, prática e contacto com o mundo profissional", category: "Saude" },
+                    { text: "Quero concluir o 9.º ano com um Curso CEF (Cozinha ou Informática)", category: "CEF_Adultos" },
+                    { text: "Sou adulto e procuro um Curso EFA / Requalificação", category: "CEF_Adultos" }
+                ]
+            }
+        ];
+
+        let quizCurrentStep = 0;
+        let quizAnswers = [];
+
+        function renderQuizStep() {
+            const container = document.getElementById('quizContent');
+            const q = QUIZ_QUESTIONS[quizCurrentStep];
+            const percent = Math.round(((quizCurrentStep + 1) / QUIZ_QUESTIONS.length) * 100);
+
+            document.getElementById('quizStepText').innerText = `Pergunta ${quizCurrentStep + 1} de ${QUIZ_QUESTIONS.length}`;
+            document.getElementById('quizPercentText').innerText = `${percent}% Concluído`;
+            document.getElementById('quizProgressBar').style.width = `${percent}%`;
+
+            let optionsHtml = q.options.map(opt => `
+                <label onclick="selectQuizOption('${opt.category}')" class="block p-4 rounded-2xl bg-slate-50 border border-slate-200 hover:border-etpc-blue hover:bg-blue-50/50 cursor-pointer transition-all shadow-sm group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-5 h-5 rounded-full border-2 border-slate-300 group-hover:border-etpc-blue flex items-center justify-center shrink-0">
+                            <div class="w-2 h-2 rounded-full bg-etpc-blue opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                        <span class="text-xs sm:text-sm font-medium text-slate-800 group-hover:text-etpc-blue">${opt.text}</span>
+                    </div>
+                </label>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900">${q.question}</h3>
+                    <div class="space-y-2.5">${optionsHtml}</div>
+                </div>
+            `;
+        }
+
+        function selectQuizOption(cat) {
+            quizAnswers.push(cat);
+            if (quizCurrentStep < QUIZ_QUESTIONS.length - 1) {
+                quizCurrentStep++;
+                renderQuizStep();
+            } else {
+                calculateQuizResult();
+            }
+        }
+
+        function calculateQuizResult() {
+            const counts = {};
+            quizAnswers.forEach(c => counts[c] = (counts[c] || 0) + 1);
+
+            let topCat = 'Informatica';
+            let maxCount = -1;
+            for (const [cat, count] of Object.entries(counts)) {
+                if (count > maxCount) {
+                    maxCount = count;
+                    topCat = cat;
+                }
+            }
+
+            const recommendedCourses = ETPC_COURSES_DATA.filter(c => c.category === topCat).slice(0, 3);
+            document.getElementById('quizContent').classList.add('hidden');
+            const resContainer = document.getElementById('quizResult');
+            resContainer.classList.remove('hidden');
+
+            resContainer.innerHTML = `
+                <div class="bg-gradient-to-br from-etpc-darkBlue to-etpc-blue text-white rounded-2xl p-6 sm:p-8 space-y-6 shadow-lg">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                        <span class="bg-etpc-accent text-slate-900 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                            Resultado Recomendado
+                        </span>
+                        <span class="text-xs text-blue-200">Vocação ETPC</span>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-extrabold text-white">Cursos sugeridos para o teu perfil:</h3>
+                        <p class="text-xs text-blue-100 mt-2">Encontrámos forte afinidade com a área de <strong>${recommendedCourses[0]?.categoryLabel || 'Formação Profissional'}</strong>.</p>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                        ${recommendedCourses.map(c => `
+                            <div class="bg-white/10 p-4 rounded-xl border border-white/15 space-y-2">
+                                <h4 class="font-bold text-white text-sm">${c.title}</h4>
+                                <p class="text-[11px] text-blue-100">${c.desc}</p>
+                                <a href="${c.link}" target="_blank" class="inline-block text-[11px] font-bold text-etpc-accent hover:underline">Ver curso em etpc.pt <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 pt-4">
+                        <button onclick="setCategoryFilter('${topCat}'); location.href='#cursos';" class="bg-etpc-accent hover:bg-etpc-accentHover text-slate-900 font-extrabold px-5 py-3 rounded-xl text-xs transition-colors">
+                            Ver Estes Cursos na Lista
+                        </button>
+                        <button onclick="resetQuiz()" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-3 rounded-xl text-xs transition-colors border border-white/20">
+                            Repetir Quiz
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function resetQuiz() {
+            quizCurrentStep = 0;
+            quizAnswers = [];
+            document.getElementById('quizResult').classList.add('hidden');
+            document.getElementById('quizContent').classList.remove('hidden');
+            renderQuizStep();
+        }
+
+        // 4. TUTOR VIRTUAL COM IA REAL (backend PHP + OpenAI Responses API)
+        const CHAT_API_URL = "api/chat.php";
+        let chatHistory = [];
+        let isChatSending = false;
+
         function toggleChat(open) {
             const chatBox = document.getElementById('chatBox');
             const iconOpen = document.getElementById('chatIconOpen');
             const iconClose = document.getElementById('chatIconClose');
-
             if (open === undefined) open = chatBox.classList.contains('hidden');
 
             if (open) {
@@ -305,7 +935,7 @@
                 chatBox.classList.add('flex');
                 iconOpen.classList.add('hidden');
                 iconClose.classList.remove('hidden');
-                setTimeout(() => document.getElementById('chatInput').focus(), 100);
+                document.getElementById('chatInput').focus();
             } else {
                 chatBox.classList.add('hidden');
                 chatBox.classList.remove('flex');
@@ -318,99 +948,191 @@
             toggleChat(true);
             const input = document.getElementById('chatInput');
             input.value = qText;
-            document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+            document.getElementById('chatForm').requestSubmit();
         }
 
         function clearChatHistory() {
+            chatHistory = [];
             const chatMessages = document.getElementById('chatMessages');
             chatMessages.innerHTML = `
-                <div class="flex gap-3 items-start">
-                    <div class="w-8 h-8 rounded-full bg-etpc-accent text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-md mt-1">
-                        <i class="fa-solid fa-robot"></i>
+                <div class="flex gap-2.5 items-start">
+                    <div class="w-8 h-8 rounded-full bg-etpc-blue text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-sm"><i class="fa-solid fa-graduation-cap text-etpc-accent"></i></div>
+                    <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 text-slate-800 shadow-sm max-w-[90%] leading-relaxed space-y-2">
+                        <p><strong>Conversa reiniciada.</strong></p>
+                        <p>Podes colocar uma nova pergunta sobre programação, tecnologia, matérias escolares ou cursos da ETPC.</p>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl rounded-tl-none border border-slate-200 text-slate-800 shadow-sm ai-response">
-                        <p><strong>Conversa reiniciada com sucesso! 🧹</strong></p>
-                        <p>Estou pronto para novas questões. O que gostarias de explorar sobre tecnologia, saúde, gestão ou os cursos da ETPC?</p>
-                    </div>
-                </div>
-            `;
+                </div>`;
         }
 
-        function appendUserMessage(text) {
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            }[char]));
+        }
+
+        // Renderização Markdown limitada e segura: texto, listas, links e blocos de código.
+        function renderAssistantMarkdown(rawText) {
+            const codeBlocks = [];
+            let source = String(rawText || '').replace(/\r\n/g, '\n');
+            source = source.replace(/```([a-zA-Z0-9_+#.-]*)\n([\s\S]*?)```/g, (_match, language, code) => {
+                const index = codeBlocks.length;
+                const safeCode = escapeHtml(code.replace(/\n$/, ''));
+                const langLabel = language ? `<span class="text-[10px] uppercase tracking-wider text-slate-400">${escapeHtml(language)}</span>` : '';
+                codeBlocks.push(`<div class="my-3 rounded-xl overflow-hidden border border-slate-700 bg-slate-950"><div class="px-3 py-2 bg-slate-900 flex items-center justify-between">${langLabel}<button type="button" class="copy-code text-[11px] text-slate-300 hover:text-white" data-copy-code="${index}"><i class="fa-regular fa-copy mr-1"></i>Copiar código</button></div><pre class="p-3 overflow-x-auto text-[12px] leading-relaxed text-slate-100"><code>${safeCode}</code></pre></div>`);
+                return `%%CODE_BLOCK_${index}%%`;
+            });
+
+            let escaped = escapeHtml(source);
+            escaped = escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_m, label, url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-etpc-blue hover:underline font-semibold">${label}</a>`);
+            escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            escaped = escaped.replace(/`([^`]+)`/g, '<code class="px-1 py-0.5 rounded bg-slate-100 text-etpc-darkBlue font-mono text-[0.92em]">$1</code>');
+            escaped = escaped.replace(/^### (.+)$/gm, '<h4 class="font-bold text-slate-900 text-sm mt-3 mb-1">$1</h4>');
+            escaped = escaped.replace(/^## (.+)$/gm, '<h3 class="font-bold text-slate-900 text-base mt-3 mb-1">$1</h3>');
+            escaped = escaped.replace(/^# (.+)$/gm, '<h3 class="font-extrabold text-slate-900 text-base mt-3 mb-1">$1</h3>');
+
+            const lines = escaped.split('\n');
+            const rendered = [];
+            let inList = false;
+            for (const line of lines) {
+                const match = line.match(/^\s*(?:[-*]|\d+\.)\s+(.+)$/);
+                if (match) {
+                    if (!inList) { rendered.push('<ul class="list-disc pl-5 space-y-1 my-2">'); inList = true; }
+                    rendered.push(`<li>${match[1]}</li>`);
+                } else {
+                    if (inList) { rendered.push('</ul>'); inList = false; }
+                    if (line.trim() === '') rendered.push('<div class="h-2"></div>');
+                    else rendered.push(`<p class="my-1">${line}</p>`);
+                }
+            }
+            if (inList) rendered.push('</ul>');
+            let output = rendered.join('');
+            output = output.replace(/%%CODE_BLOCK_(\d+)%%/g, (_m, index) => codeBlocks[Number(index)] || '');
+            return output;
+        }
+
+        function appendUserMessage(message) {
             const chatMessages = document.getElementById('chatMessages');
-            const msgHtml = `
-                <div class="flex gap-3 items-end justify-end mb-4">
-                    <div class="bg-etpc-blue text-white p-4 rounded-2xl rounded-br-none text-sm shadow-md max-w-[85%] leading-relaxed font-medium">
-                        ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
-                    </div>
-                </div>
-            `;
-            chatMessages.insertAdjacentHTML('beforeend', msgHtml);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex justify-end';
+            const bubble = document.createElement('div');
+            bubble.className = 'max-w-[88%] rounded-2xl rounded-br-md bg-etpc-blue text-white px-4 py-3 text-sm leading-relaxed shadow-sm whitespace-pre-wrap break-words';
+            bubble.textContent = message;
+            wrapper.appendChild(bubble);
+            chatMessages.appendChild(wrapper);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function appendBotMessage(text) {
+        function appendBotMessage(message) {
             const chatMessages = document.getElementById('chatMessages');
-            const formattedHtml = formatBotResponse(text);
-
-            const msgHtml = `
-                <div class="flex gap-3 items-start mb-4">
-                    <div class="w-8 h-8 rounded-full bg-etpc-accent text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-md mt-1">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <div class="bg-slate-50 p-5 rounded-2xl rounded-tl-none border border-slate-200 text-slate-800 shadow-sm max-w-[90%] ai-response text-sm">
-                        ${formattedHtml}
-                    </div>
-                </div>
-            `;
-            chatMessages.insertAdjacentHTML('beforeend', msgHtml);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex gap-2.5 items-start';
+            const avatar = document.createElement('div');
+            avatar.className = 'w-8 h-8 rounded-full bg-etpc-blue text-white flex items-center justify-center shrink-0 text-xs shadow-sm';
+            avatar.innerHTML = '<i class="fa-solid fa-graduation-cap text-etpc-accent"></i>';
+            const bubble = document.createElement('div');
+            bubble.className = 'max-w-[92%] rounded-2xl rounded-tl-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 leading-relaxed shadow-sm break-words';
+            bubble.innerHTML = renderAssistantMarkdown(message);
+            wrapper.append(avatar, bubble);
+            chatMessages.appendChild(wrapper);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function showTypingIndicator() {
             const chatMessages = document.getElementById('chatMessages');
-            const loaderHtml = `
-                <div id="typingIndicator" class="flex gap-3 items-start mb-4">
-                    <div class="w-8 h-8 rounded-full bg-etpc-accent text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-md mt-1">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl rounded-tl-none border border-slate-200 text-slate-400 text-sm shadow-sm flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 bg-etpc-blue/50 rounded-full animate-bounce"></span>
-                        <span class="w-2.5 h-2.5 bg-etpc-blue/50 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                        <span class="w-2.5 h-2.5 bg-etpc-blue/50 rounded-full animate-bounce [animation-delay:0.4s]"></span>
-                    </div>
-                </div>
-            `;
-            chatMessages.insertAdjacentHTML('beforeend', loaderHtml);
+            const loader = document.createElement('div');
+            loader.id = 'typingIndicator';
+            loader.className = 'flex gap-2.5 items-start';
+            loader.innerHTML = `<div class="w-8 h-8 rounded-full bg-etpc-blue text-white flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-graduation-cap text-etpc-accent"></i></div><div class="bg-white border border-slate-200 rounded-2xl rounded-tl-md px-4 py-3 text-xs text-slate-500 shadow-sm"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce"></span><span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce [animation-delay:150ms]"></span><span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce [animation-delay:300ms]"></span><span>A preparar uma explicação...</span></span></div>`;
+            chatMessages.appendChild(loader);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function removeTypingIndicator() {
-            const indicator = document.getElementById('typingIndicator');
-            if (indicator) indicator.remove();
+            document.getElementById('typingIndicator')?.remove();
         }
 
         async function handleUserSubmit(event) {
             event.preventDefault();
+            if (isChatSending) return;
+
             const input = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
             const query = input.value.trim();
             if (!query) return;
 
             appendUserMessage(query);
+            chatHistory.push({ role: 'user', content: query });
+            chatHistory = chatHistory.slice(-16);
             input.value = '';
+            isChatSending = true;
+            sendBtn.disabled = true;
+            sendBtn.classList.add('opacity-60', 'cursor-not-allowed');
             showTypingIndicator();
 
-            // Simulamos o tempo de pensamento de uma IA real (1.2 a 2 seg)
-            setTimeout(() => {
+            try {
+                const response = await fetch(CHAT_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ messages: chatHistory })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || 'Não foi possível obter uma resposta.');
+                if (!data.reply || typeof data.reply !== 'string') throw new Error('A resposta recebida estava vazia.');
+
+                chatHistory.push({ role: 'assistant', content: data.reply });
+                chatHistory = chatHistory.slice(-16);
                 removeTypingIndicator();
-                const botResponse = processSmartResponse(query);
-                appendBotMessage(botResponse);
-            }, 1200 + Math.random() * 800);
+                appendBotMessage(data.reply);
+            } catch (error) {
+                removeTypingIndicator();
+                const friendlyMessage = error.message === 'Failed to fetch'
+                    ? 'Não foi possível ligar ao servidor. Confirma se estás a abrir o projeto através do WampServer e se o serviço Apache está ativo.'
+                    : error.message;
+                appendBotMessage(`**Não foi possível obter uma resposta da IA.**\n\n${friendlyMessage}\n\nConfirma também se configuraste a chave da API no ficheiro \`api/config.php\`.`);
+                // Não guardar mensagens de erro como respostas do assistente no histórico enviado à API.
+                chatHistory.pop();
+            } finally {
+                isChatSending = false;
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                input.focus();
+            }
         }
 
-        // INIT DOM
+        // Copiar exemplos de código apresentados pelo tutor.
+        document.addEventListener('click', async (event) => {
+            const button = event.target.closest('[data-copy-code]');
+            if (!button) return;
+            const wrapper = button.closest('.bg-slate-950');
+            const code = wrapper?.querySelector('pre code')?.textContent || '';
+            try {
+                await navigator.clipboard.writeText(code);
+                button.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copiado';
+            } catch {
+                button.textContent = 'Não foi possível copiar';
+            }
+        });
+
+        function handleContactSubmit() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const course = document.getElementById('contactCourseSelect').value;
+
+            if (!name || !email) {
+                alert("Por favor preencha pelo menos o nome e o email de contacto.");
+                return;
+            }
+
+            const message = document.getElementById('contactMsg').value.trim();
+            const subject = encodeURIComponent(`Pedido de informação - ${course || 'ETPC'}`);
+            const body = encodeURIComponent(`Nome: ${name}\nEmail: ${email}\nCurso: ${course || 'Não indicado'}\n\nMensagem: ${message || 'Pretendo receber mais informações.'}`);
+            window.location.href = `mailto:geral@etpc.pt?subject=${subject}&body=${body}`;
+        }
+
+        // DOM Loaded Init
         window.addEventListener('DOMContentLoaded', () => {
-            // Se existirem as funções de renderização de cursos no HTML original, seriam chamadas aqui
+            renderCourses(ETPC_COURSES_DATA);
+            renderQuizStep();
         });
     </script>
 </body>
