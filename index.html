@@ -450,7 +450,7 @@
                         <div>
                             <h3 class="font-bold text-sm leading-tight">Tutor Virtual ETPC</h3>
                             <span class="text-[10px] text-blue-200 flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Assistente de aprendizagem
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Modo local · sem API · sem chave
                             </span>
                         </div>
                     </div>
@@ -472,9 +472,9 @@
                         <i class="fa-solid fa-robot text-etpc-accent"></i>
                     </div>
                     <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 text-slate-800 shadow-sm space-y-2 max-w-[85%] leading-relaxed">
-                        <p>Olá! Sou o <strong>Tutor Virtual</strong> deste portal.</p>
-                        <p>Podes fazer perguntas sobre programação (Python, C++, C#, JavaScript, HTML e CSS), bases de dados, redes, matemática, tecnologia ou outros temas. Também posso esclarecer dúvidas sobre a oferta formativa da ETPC.</p>
-                        <p>Explico os assuntos passo a passo, com exemplos e código quando for útil. Por onde começamos?</p>
+                        <p>Olá! Sou o <strong>Tutor Virtual local</strong> deste portal.</p>
+                        <p>Não preciso de API, chave, conta ou servidor para responder. Tenho uma base de explicações e exemplos sobre programação, informática, matemática e cursos da ETPC.</p>
+                        <p>Posso explicar os temas incluídos passo a passo, simplificar respostas e mostrar código. Se uma pergunta estiver fora da base local, digo-te com transparência.</p>
                     </div>
                 </div>
             </div>
@@ -495,7 +495,7 @@
                         <i class="fa-solid fa-paper-plane text-xs"></i>
                     </button>
                 </form>
-                <p class="mt-2 px-1 text-[10px] leading-relaxed text-slate-500">Evita partilhar dados pessoais. As respostas são geradas por IA e podem precisar de confirmação. Informação oficial da escola: <a href="https://etpc.pt/" target="_blank" rel="noopener noreferrer" class="font-semibold text-etpc-blue hover:underline">etpc.pt</a>.</p>
+                <p class="mt-2 px-1 text-[10px] leading-relaxed text-slate-500">Funciona neste navegador, sem API, conta ou chave. Usa uma base local de explicações; perguntas fora dos conteúdos disponíveis podem não ser reconhecidas. Evita partilhar dados pessoais. <a href="https://etpc.pt/" target="_blank" rel="noopener noreferrer" class="font-semibold text-etpc-blue hover:underline">Site oficial da ETPC</a>.</p>
             </div>
         </div>
     </div>
@@ -919,17 +919,314 @@
             renderQuizStep();
         }
 
-        // 4. TUTOR VIRTUAL COM IA REAL (backend PHP + OpenAI Responses API)
-        const CHAT_API_URL = "api/chat.php";
+        // 4. TUTOR VIRTUAL LOCAL — SEM API, SERVIDOR, CHAVE OU CUSTOS POR MENSAGEM
+        // As respostas são construídas a partir desta base de conhecimento incluída no próprio HTML.
         let chatHistory = [];
         let isChatSending = false;
+        let currentTopic = null;
+
+        const LOCAL_TUTOR_KNOWLEDGE = [
+            {
+                id: 'python', title: 'Python', terms: ['python', 'linguagem python', 'programar em python'],
+                intro: 'Python é uma linguagem de programação de alto nível, conhecida por ter uma sintaxe relativamente simples e legível. É utilizada para dar instruções ao computador e criar programas.',
+                uses: ['Automatizar tarefas e organizar ficheiros.', 'Criar aplicações e serviços web.', 'Trabalhar com dados, estatística e inteligência artificial.', 'Desenvolver scripts, ferramentas e protótipos.'],
+                how: 'O programador escreve instruções num ficheiro, normalmente terminado em `.py`. O interpretador Python lê o código e executa as instruções. A linguagem oferece tipos de dados, condições, ciclos, funções e bibliotecas que permitem construir programas simples ou complexos.',
+                exampleLang: 'python', example: 'nome = input("Como te chamas? ")\nidade = 16\n\nprint(f"Olá, {nome}!")\nprint(f"Daqui a um ano terás {idade + 1} anos.")',
+                explain: ['`input()` pede informação ao utilizador.', '`nome` e `idade` são variáveis que guardam valores.', '`print()` apresenta informação no ecrã.', 'O `f` antes da cadeia permite inserir variáveis dentro do texto.'],
+                limits: 'Python pode ser mais lento do que linguagens compiladas como C ou C++ em determinadas tarefas de elevado desempenho. Também é necessário instalar o interpretador no computador onde se pretende executar o programa.',
+                when: 'É uma excelente opção para aprender os fundamentos da programação, automatizar tarefas, trabalhar com dados e criar protótipos.'
+            },
+            {
+                id: 'cpp', title: 'C++', terms: ['c++', 'cpp', 'cplusplus', 'linguagem c++'],
+                intro: 'C++ é uma linguagem de programação compilada, de propósito geral, que permite controlar muitos aspetos do funcionamento de um programa e da utilização da memória do computador.',
+                uses: ['Desenvolvimento de jogos e motores gráficos.', 'Software de elevado desempenho.', 'Sistemas operativos, aplicações de desktop e ferramentas.', 'Sistemas embebidos e aplicações que comunicam diretamente com o hardware.'],
+                how: 'O código é escrito em ficheiros, muitas vezes com a extensão `.cpp`, e depois é transformado por um compilador num programa executável. C++ suporta programação procedural, orientação a objetos e programação genérica.',
+                exampleLang: 'cpp', example: '#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string nome;\n    cout << "Como te chamas? ";\n    cin >> nome;\n    cout << "Ola, " << nome << "!" << endl;\n    return 0;\n}',
+                explain: ['`#include <iostream>` disponibiliza operações de entrada e saída.', '`main()` é o ponto de entrada do programa.', '`cin` lê informação introduzida e `cout` escreve no ecrã.', '`return 0` indica que o programa terminou normalmente.'],
+                limits: 'A linguagem tem mais regras e detalhes técnicos do que Python. O programador precisa de compreender melhor tipos, compilação, memória e gestão de recursos.',
+                when: 'É indicada quando o desempenho e o controlo dos recursos do computador são importantes, por exemplo em motores de jogos, software de sistemas e aplicações exigentes.'
+            },
+            {
+                id: 'csharp', title: 'C#', terms: ['c#', 'c sharp', 'csharp', 'linguagem c sharp'],
+                intro: 'C# (lê-se “C sharp”) é uma linguagem moderna desenvolvida pela Microsoft e muito utilizada com a plataforma .NET. É orientada a objetos e inclui ferramentas para criar vários tipos de aplicações.',
+                uses: ['Aplicações de desktop e serviços web.', 'Jogos desenvolvidos com Unity.', 'Aplicações empresariais e sistemas de gestão.', 'Serviços e ferramentas que utilizam a plataforma .NET.'],
+                how: 'O código C# é normalmente compilado para uma representação intermédia que é executada pelo .NET Runtime. A linguagem possui tipos, classes, métodos, exceções e ferramentas para organizar projetos.',
+                exampleLang: 'csharp', example: 'using System;\n\nclass Program\n{\n    static void Main()\n    {\n        string nome = "Ana";\n        int idade = 16;\n        Console.WriteLine($"Olá, {nome}! Tens {idade} anos.");\n    }\n}',
+                explain: ['`using System` permite utilizar funcionalidades comuns da plataforma.', '`class Program` define uma classe.', '`Main()` é o método inicial.', '`Console.WriteLine()` apresenta texto na consola.'],
+                limits: 'Para desenvolver em C# é habitual utilizar o .NET SDK e um editor ou ambiente de desenvolvimento. O ecossistema pode parecer extenso a quem está a começar.',
+                when: 'É uma boa escolha para aplicações .NET e para desenvolvimento de jogos com Unity.'
+            },
+            {
+                id: 'java', title: 'Java', terms: ['java', 'linguagem java'],
+                intro: 'Java é uma linguagem de programação fortemente tipada e orientada a objetos. É conhecida pela sua utilização em aplicações empresariais, serviços e aplicações Android (embora o desenvolvimento Android moderno também utilize Kotlin).',
+                uses: ['Aplicações empresariais e sistemas de grandes organizações.', 'Serviços e aplicações de servidor.', 'Ferramentas e aplicações multiplataforma.', 'Sistemas Android, especialmente em projetos existentes.'],
+                how: 'O código Java é compilado para bytecode, que é executado pela Java Virtual Machine (JVM). Esta camada permite executar o mesmo bytecode em diferentes sistemas que tenham uma JVM compatível.',
+                exampleLang: 'java', example: 'public class Main {\n    public static void main(String[] args) {\n        String nome = "Ana";\n        int idade = 16;\n        System.out.println("Olá, " + nome + "! Tens " + idade + " anos.");\n    }\n}',
+                explain: ['`class Main` declara uma classe.', '`main` é o método a partir do qual o programa começa.', '`String` guarda texto e `int` guarda números inteiros.', '`System.out.println()` apresenta uma linha no ecrã.'],
+                limits: 'A estrutura inicial de um programa Java pode exigir mais código do que um exemplo equivalente em Python. É necessário compreender classes e tipos.',
+                when: 'É muito utilizado em sistemas empresariais, serviços de servidor e projetos que beneficiam do ecossistema Java.'
+            },
+            {
+                id: 'javascript', title: 'JavaScript', terms: ['javascript', 'js', 'linguagem javascript'],
+                intro: 'JavaScript é uma linguagem de programação utilizada sobretudo para tornar as páginas web interativas. Também pode ser executada fora do navegador, por exemplo com Node.js.',
+                uses: ['Responder a cliques e ações do utilizador numa página.', 'Validar formulários e alterar conteúdos sem recarregar a página.', 'Criar aplicações web e serviços de servidor.', 'Desenvolver aplicações multiplataforma e jogos simples.'],
+                how: 'No navegador, JavaScript pode aceder ao DOM, que representa a estrutura da página HTML, e alterar texto, estilos e elementos. Também permite reagir a eventos, como cliques e submissões de formulários.',
+                exampleLang: 'javascript', example: 'const botao = document.querySelector("#meuBotao");\n\nbotao.addEventListener("click", () => {\n    alert("Olá! Clicaste no botão.");\n});',
+                explain: ['`querySelector()` procura um elemento HTML.', '`addEventListener()` regista uma ação para um evento.', '`click` representa um clique.', 'A função é executada quando o botão é clicado.'],
+                limits: 'O JavaScript executado no navegador está sujeito às regras de segurança do próprio navegador e não tem acesso livre a todos os recursos do computador.',
+                when: 'É essencial no desenvolvimento web quando se pretende criar páginas e aplicações interativas.'
+            },
+            {
+                id: 'html', title: 'HTML', terms: ['html', 'hypertext markup language', 'estrutura de uma pagina web'],
+                intro: 'HTML significa HyperText Markup Language. Não é, por si só, uma linguagem de programação: é uma linguagem de marcação que define a estrutura e o significado dos conteúdos de uma página web.',
+                uses: ['Organizar títulos, parágrafos, imagens e ligações.', 'Criar formulários e tabelas.', 'Estruturar páginas para navegadores e tecnologias de apoio.', 'Fornecer a base sobre a qual CSS e JavaScript trabalham.'],
+                how: 'A página é construída com elementos representados por etiquetas, como `<h1>`, `<p>` e `<img>`. Os elementos podem ter atributos, por exemplo `src`, `alt` ou `href`.',
+                exampleLang: 'html', example: '<!DOCTYPE html>\n<html lang="pt-PT">\n<head>\n    <meta charset="UTF-8">\n    <title>A minha página</title>\n</head>\n<body>\n    <h1>Olá!</h1>\n    <p>Esta é a minha primeira página.</p>\n</body>\n</html>',
+                explain: ['`<!DOCTYPE html>` indica que o documento utiliza HTML moderno.', '`<html>` contém a página.', '`<head>` guarda informação sobre o documento.', '`<body>` contém o conteúdo visível.', '`<h1>` cria o título principal e `<p>` cria um parágrafo.'],
+                limits: 'HTML organiza conteúdos, mas não define sozinho o aspeto visual avançado nem a lógica interativa. Para isso utiliza-se normalmente CSS e JavaScript.',
+                when: 'É o ponto de partida para construir qualquer página web tradicional.'
+            },
+            {
+                id: 'css', title: 'CSS', terms: ['css', 'cascading style sheets', 'estilos web', 'folhas de estilo'],
+                intro: 'CSS significa Cascading Style Sheets. É uma linguagem de folhas de estilo utilizada para controlar a apresentação visual de documentos HTML.',
+                uses: ['Definir cores, tipos de letra e tamanhos.', 'Organizar elementos com Flexbox e Grid.', 'Adaptar páginas a telemóveis e computadores.', 'Criar estados visuais, transições e animações.'],
+                how: 'Uma regra CSS seleciona elementos e aplica-lhes declarações. Cada declaração tem uma propriedade e um valor, como `color: blue;`. O navegador combina regras, prioridades e herança para calcular o estilo final.',
+                exampleLang: 'css', example: 'body {\n    font-family: Arial, sans-serif;\n    background: #f1f5f9;\n    color: #1e293b;\n}\n\nh1 {\n    color: #004b87;\n    text-align: center;\n}',
+                explain: ['`body` seleciona o corpo da página.', '`font-family` define o tipo de letra.', '`background` define o fundo.', '`color` define a cor do texto.', '`text-align` controla o alinhamento do texto.'],
+                limits: 'CSS controla a apresentação, não substitui a estrutura HTML nem a lógica de programação JavaScript. Regras mais específicas podem também tornar uma folha de estilos difícil de manter.',
+                when: 'É utilizado sempre que se pretende definir o design e a adaptação visual de uma página web.'
+            },
+            {
+                id: 'php', title: 'PHP', terms: ['php', 'linguagem php'],
+                intro: 'PHP é uma linguagem de programação frequentemente utilizada no servidor para criar páginas web dinâmicas. O servidor executa o PHP e envia o resultado, normalmente HTML, para o navegador.',
+                uses: ['Processar formulários.', 'Consultar e atualizar bases de dados.', 'Gerir sessões e autenticação.', 'Construir páginas e sistemas web com conteúdos dinâmicos.'],
+                how: 'O código PHP é executado no servidor. Pode receber dados de um pedido, validar esses dados, executar operações e gerar uma resposta. O navegador não recebe normalmente o código PHP original.',
+                exampleLang: 'php', example: '<?php\n$nome = "Ana";\n$idade = 16;\necho "Olá, " . $nome . "!";\necho " Tens " . $idade . " anos.";\n?>',
+                explain: ['`<?php` inicia o bloco PHP.', '`$nome` e `$idade` são variáveis.', '`echo` envia texto para a resposta da página.', 'O ponto (`.`) junta cadeias de texto.'],
+                limits: 'É necessário um servidor com PHP para executar ficheiros PHP. Abrir um ficheiro `.php` diretamente como se fosse um HTML não executa o código.',
+                when: 'É uma opção comum para criar aplicações web no servidor, por exemplo com Apache, MySQL e PHP.'
+            },
+            {
+                id: 'sql', title: 'SQL e bases de dados', terms: ['sql', 'base de dados', 'bases de dados', 'mysql', 'consultas sql', 'database'],
+                intro: 'SQL significa Structured Query Language. É uma linguagem utilizada para consultar e gerir dados em bases de dados relacionais, organizadas normalmente em tabelas com linhas e colunas.',
+                uses: ['Pesquisar registos.', 'Adicionar, alterar e apagar dados.', 'Relacionar informação entre tabelas.', 'Agrupar resultados e produzir estatísticas.'],
+                how: 'Uma base de dados relacional guarda informação em tabelas. As tabelas podem relacionar-se através de chaves primárias e estrangeiras. Uma consulta SQL indica ao sistema quais os dados a procurar ou alterar.',
+                exampleLang: 'sql', example: 'SELECT nome, email\nFROM clientes\nWHERE cidade = \'Cantanhede\'\nORDER BY nome ASC;',
+                explain: ['`SELECT` indica as colunas a apresentar.', '`FROM` indica a tabela.', '`WHERE` filtra os registos.', '`ORDER BY` ordena os resultados.', '`ASC` significa ordem ascendente.'],
+                limits: 'SQL é específica para trabalhar com dados e não substitui uma linguagem geral como Python ou C#. É importante validar permissões e utilizar consultas parametrizadas na aplicação.',
+                when: 'É fundamental em sistemas de gestão, lojas online, aplicações escolares e projetos que precisam de guardar dados de forma estruturada.'
+            },
+            {
+                id: 'gdscript', title: 'GDScript e Godot', terms: ['gdscript', 'godot', 'godot engine', 'jogo godot'],
+                intro: 'GDScript é uma linguagem de programação integrada no motor Godot. Foi criada para trabalhar com os nós, cenas e sistemas de jogos do Godot, apresentando uma sintaxe semelhante à de Python.',
+                uses: ['Controlar movimentos de personagens.', 'Gerir colisões, pontuação e vidas.', 'Criar menus e interfaces.', 'Controlar inimigos, níveis e eventos do jogo.'],
+                how: 'Um projeto Godot é organizado em cenas e nós. Um script GDScript pode ser associado a um nó para definir o seu comportamento. Métodos como `_ready()` e `_process()` são chamados pelo motor em momentos específicos.',
+                exampleLang: 'gdscript', example: 'extends CharacterBody2D\n\n@export var velocidade: float = 220.0\n\nfunc _physics_process(_delta):\n    var direcao = Input.get_axis("ui_left", "ui_right")\n    velocity.x = direcao * velocidade\n    move_and_slide()',
+                explain: ['`extends CharacterBody2D` indica o tipo de nó base.', '`@export` permite alterar o valor no Inspetor.', '`_physics_process()` é chamado durante o ciclo de física.', '`Input.get_axis()` lê duas direções de entrada.', '`move_and_slide()` move o personagem tendo em conta a física.'],
+                limits: 'GDScript está especialmente integrado no Godot. Para projetos de outros motores ou aplicações gerais pode ser necessário aprender outra linguagem.',
+                when: 'É indicado para desenvolver jogos 2D e 3D no Godot, especialmente para quem quer trabalhar diretamente com as funcionalidades do motor.'
+            },
+            {
+                id: 'arduino', title: 'Arduino e programação de placas', terms: ['arduino', 'microcontrolador', 'sensor', 'led', 'eletronica programavel'],
+                intro: 'Arduino é uma plataforma de prototipagem eletrónica que combina placas com microcontroladores e ferramentas de programação. Permite ler sensores e controlar componentes eletrónicos.',
+                uses: ['Acender LEDs e controlar motores.', 'Ler botões, sensores de distância e temperatura.', 'Criar protótipos de automação.', 'Construir projetos educativos de eletrónica.'],
+                how: 'Um programa Arduino contém normalmente `setup()`, executada uma vez no arranque, e `loop()`, repetida enquanto a placa estiver ligada. Os pinos podem ser configurados como entradas ou saídas.',
+                exampleLang: 'cpp', example: 'const int led = 13;\n\nvoid setup() {\n    pinMode(led, OUTPUT);\n}\n\nvoid loop() {\n    digitalWrite(led, HIGH);\n    delay(1000);\n    digitalWrite(led, LOW);\n    delay(1000);\n}',
+                explain: ['`pinMode()` configura o pino.', '`OUTPUT` indica que o pino vai enviar um sinal.', '`digitalWrite()` define o estado do pino.', '`HIGH` liga o sinal e `LOW` desliga-o.', '`delay(1000)` espera aproximadamente um segundo.'],
+                limits: 'É necessário respeitar a tensão e a corrente permitidas por cada placa e componente. Motores e cargas maiores podem precisar de circuitos de controlo apropriados.',
+                when: 'É útil para aprender eletrónica, programação física e automação através de pequenos projetos.'
+            },
+            {
+                id: 'c', title: 'Linguagem C', terms: ['linguagem c', 'programacao em c', 'linguagem c de programacao'],
+                intro: 'C é uma linguagem de programação compilada, estruturada e de baixo nível relativamente a muitas linguagens modernas. Dá bastante controlo sobre a memória e os recursos do computador.',
+                uses: ['Sistemas operativos e componentes de sistema.', 'Firmware e sistemas embebidos.', 'Bibliotecas e ferramentas de desempenho.', 'Aprendizagem de conceitos fundamentais de memória.'],
+                how: 'O programador escreve instruções em ficheiros `.c`. Um compilador transforma esse código num executável. C trabalha com tipos, funções, estruturas, ponteiros e gestão explícita de memória.',
+                exampleLang: 'c', example: '#include <stdio.h>\n\nint main(void) {\n    int numero = 7;\n    printf("O numero e %d\\n", numero);\n    return 0;\n}',
+                explain: ['`stdio.h` disponibiliza funções de entrada e saída.', '`main` é a função inicial.', '`int` declara um número inteiro.', '`printf` apresenta texto e valores.', '`%d` é o marcador utilizado para apresentar um inteiro.'],
+                limits: 'C exige atenção à memória, aos tipos e aos limites dos dados. Muitos erros só são detetados durante a execução ou exigem ferramentas de análise.',
+                when: 'É indicada para sistemas, microcontroladores e situações em que o controlo e o desempenho são importantes.'
+            },
+            {
+                id: 'algoritmo', title: 'Algoritmos', terms: ['algoritmo', 'algoritmos', 'logica de programacao', 'passos para resolver um problema'],
+                intro: 'Um algoritmo é uma sequência finita e organizada de passos que permite resolver um problema ou realizar uma tarefa. Um algoritmo não depende de uma linguagem específica.',
+                uses: ['Planear a solução antes de escrever código.', 'Organizar cálculos e decisões.', 'Comparar diferentes formas de resolver o mesmo problema.', 'Explicar uma solução através de pseudocódigo ou fluxogramas.'],
+                how: 'Primeiro identifica-se o problema, os dados de entrada e o resultado pretendido. Depois define-se uma sequência de operações, condições e repetições. No final, testa-se a solução com diferentes exemplos.',
+                exampleLang: 'text', example: '1. Pedir dois números.\n2. Somar os dois números.\n3. Guardar o resultado.\n4. Apresentar o resultado ao utilizador.',
+                explain: ['Os números são os dados de entrada.', 'A soma é o processamento.', 'O resultado apresentado é a saída.', 'O algoritmo descreve a lógica independentemente da linguagem usada.'],
+                limits: 'Um algoritmo pode estar correto em teoria e ainda assim precisar de melhorias de eficiência ou de tratamento de casos especiais.',
+                when: 'É útil antes de começar qualquer programa, porque ajuda a pensar na solução sem ficar preso à sintaxe de uma linguagem.'
+            },
+            {
+                id: 'variaveis', title: 'Variáveis e tipos de dados', terms: ['variavel', 'variaveis', 'tipo de dados', 'string', 'integer', 'int', 'boolean', 'bool', 'float'],
+                intro: 'Uma variável é um nome associado a um valor que um programa pode consultar ou alterar. O tipo de dados indica que tipo de valor está guardado e que operações fazem sentido.',
+                uses: ['Guardar nomes, idades e preços.', 'Contar pontos ou tentativas.', 'Guardar valores calculados.', 'Controlar o estado de um programa.'],
+                how: 'Em linguagens como Python, o tipo pode ser associado automaticamente ao valor. Em C, C++ e C#, é habitual declarar explicitamente o tipo. Tipos comuns incluem inteiros, números decimais, texto e valores lógicos.',
+                exampleLang: 'python', example: 'nome = "Rita"       # texto (string)\nidade = 16          # inteiro (int)\naltura = 1.65       # decimal (float)\ninscrito = True     # lógico (boolean)\n\nprint(nome, idade, altura, inscrito)',
+                explain: ['`nome` guarda texto.', '`idade` guarda um número inteiro.', '`altura` guarda um número decimal.', '`inscrito` guarda verdadeiro ou falso.', 'Os nomes devem ser claros e representar o conteúdo.'],
+                limits: 'É importante escolher tipos adequados. Por exemplo, guardar um código postal como número pode eliminar zeros iniciais; por vezes, esse valor deve ser tratado como texto.',
+                when: 'As variáveis são fundamentais em praticamente todos os programas, porque permitem guardar e trabalhar com informação.'
+            },
+            {
+                id: 'condicoes', title: 'Condições (if, else)', terms: ['if', 'else', 'elif', 'condicao', 'condicoes', 'decisao em programacao', 'decisoes'],
+                intro: 'Uma condição permite ao programa escolher o que fazer consoante uma expressão seja verdadeira ou falsa. É assim que se criam decisões no código.',
+                uses: ['Verificar se uma pessoa tem idade suficiente para uma ação.', 'Confirmar se uma palavra-passe é válida.', 'Decidir se um jogador ganhou ou perdeu.', 'Apresentar mensagens diferentes consoante um resultado.'],
+                how: 'O programa avalia uma expressão lógica. Se for verdadeira, executa o bloco associado a `if`. Caso contrário, pode executar `else`. Em Python, `elif` permite testar outra condição.',
+                exampleLang: 'python', example: 'idade = 16\n\nif idade >= 18:\n    print("Maior de idade")\nelse:\n    print("Menor de idade")',
+                explain: ['`if` inicia a decisão.', '`idade >= 18` compara o valor com 18.', 'Se a condição for verdadeira, executa o primeiro bloco.', 'Caso seja falsa, executa o bloco `else`.'],
+                limits: 'Condições demasiado complexas podem tornar o código difícil de ler. É preferível dividir decisões extensas em passos mais pequenos.',
+                when: 'Utiliza-se sempre que o comportamento do programa depende de uma condição ou de uma escolha.'
+            },
+            {
+                id: 'ciclos', title: 'Ciclos (for e while)', terms: ['ciclo', 'ciclos', 'for', 'while', 'repeticao', 'repeticoes', 'loop', 'loops'],
+                intro: 'Um ciclo permite repetir um conjunto de instruções. Evita escrever o mesmo código muitas vezes e torna os programas mais simples.',
+                uses: ['Percorrer uma lista de produtos.', 'Contar de 1 até 10.', 'Repetir uma pergunta enquanto a resposta não for válida.', 'Atualizar posições de objetos num jogo.'],
+                how: '`for` é normalmente utilizado quando se percorre uma sequência ou se conhece o conjunto de elementos. `while` repete enquanto uma condição continuar verdadeira. É importante garantir que o ciclo termina quando deve terminar.',
+                exampleLang: 'python', example: 'for numero in range(1, 6):\n    print(numero)\n\ncontador = 1\nwhile contador <= 3:\n    print("Repetição", contador)\n    contador += 1',
+                explain: ['O primeiro `for` percorre os números de 1 a 5.', '`range(1, 6)` termina antes do 6.', '`while` verifica a condição antes de cada repetição.', '`contador += 1` aumenta o contador e ajuda a terminar o ciclo.'],
+                limits: 'Um erro comum é criar um ciclo infinito, quando a condição nunca passa a falsa. Também é importante escolher o ciclo adequado à tarefa.',
+                when: 'Usa ciclos quando precisas de repetir uma operação ou percorrer vários elementos.'
+            },
+            {
+                id: 'funcoes', title: 'Funções', terms: ['funcao', 'funcoes', 'metodo', 'metodos', 'parametro', 'parametros', 'return'],
+                intro: 'Uma função é um bloco de código com um nome, criado para realizar uma tarefa. Pode receber dados de entrada, chamados parâmetros, e devolver um resultado.',
+                uses: ['Evitar repetir código.', 'Dividir um programa em partes mais pequenas.', 'Separar responsabilidades e facilitar testes.', 'Reutilizar operações em diferentes partes do projeto.'],
+                how: 'Define-se a função, escolhem-se os parâmetros necessários e escreve-se o conjunto de instruções. Quando a função é chamada, o programa executa esse bloco. `return` pode devolver um valor.',
+                exampleLang: 'python', example: 'def calcular_area_retangulo(largura, altura):\n    area = largura * altura\n    return area\n\nresultado = calcular_area_retangulo(5, 3)\nprint(resultado)  # 15',
+                explain: ['`def` define uma função em Python.', '`largura` e `altura` são parâmetros.', 'A multiplicação calcula a área.', '`return` devolve o resultado.', 'A chamada envia os valores 5 e 3 para a função.'],
+                limits: 'Funções demasiado grandes ou com demasiadas responsabilidades são mais difíceis de compreender e testar.',
+                when: 'São úteis em qualquer projeto que precise de organização, reutilização e código mais fácil de manter.'
+            },
+            {
+                id: 'arrays', title: 'Arrays e listas', terms: ['array', 'arrays', 'lista', 'listas', 'vetor', 'vetores', 'colecao de dados'],
+                intro: 'Uma lista ou array permite guardar vários valores numa única estrutura. Em vez de criar uma variável para cada elemento, o programa pode aceder aos elementos através de uma posição ou índice.',
+                uses: ['Guardar nomes de alunos ou produtos.', 'Registar pontuações de um jogo.', 'Percorrer vários valores com um ciclo.', 'Ordenar e pesquisar conjuntos de dados.'],
+                how: 'Em muitas linguagens, o primeiro elemento está no índice 0. As operações mais comuns são consultar, alterar, adicionar e remover elementos. A forma concreta varia entre linguagens.',
+                exampleLang: 'python', example: 'frutas = ["maçã", "banana", "laranja"]\n\nprint(frutas[0])       # maçã\nfrutas.append("pera")\n\nfor fruta in frutas:\n    print(fruta)',
+                explain: ['Os valores ficam agrupados em `frutas`.', '`frutas[0]` acede ao primeiro elemento.', '`append()` adiciona um elemento.', 'O ciclo `for` percorre todos os elementos.'],
+                limits: 'É necessário respeitar os índices disponíveis. Em linguagens com arrays de tamanho fixo, não se pode ultrapassar o espaço reservado.',
+                when: 'Utiliza listas ou arrays sempre que precisas de trabalhar com vários valores relacionados.'
+            },
+            {
+                id: 'poo', title: 'Programação orientada a objetos', terms: ['orientacao a objetos', 'programacao orientada a objetos', 'poo', 'classe', 'classes', 'objeto', 'objetos', 'heranca', 'encapsulamento'],
+                intro: 'A programação orientada a objetos (POO) é uma forma de organizar um programa através de classes e objetos. Uma classe descreve características e comportamentos; um objeto é uma instância dessa classe.',
+                uses: ['Modelar entidades como alunos, produtos ou personagens.', 'Organizar aplicações de maior dimensão.', 'Reutilizar comportamentos através de composição e herança.', 'Separar dados e operações de forma estruturada.'],
+                how: 'Uma classe define atributos (dados) e métodos (comportamentos). Ao criar um objeto, o programa obtém uma instância com os seus próprios valores. Conceitos comuns incluem encapsulamento, herança e polimorfismo.',
+                exampleLang: 'python', example: 'class Aluno:\n    def __init__(self, nome, curso):\n        self.nome = nome\n        self.curso = curso\n\n    def apresentar(self):\n        print(f"{self.nome} estuda {self.curso}.")\n\naluno1 = Aluno("Rita", "Programação")\naluno1.apresentar()',
+                explain: ['`class Aluno` declara uma classe.', '`__init__` inicializa o novo objeto.', '`self.nome` e `self.curso` são atributos.', '`apresentar()` é um método.', '`aluno1` é um objeto criado a partir da classe.'],
+                limits: 'Nem todos os problemas precisam de POO. Criar muitas classes sem necessidade pode tornar um projeto mais complexo.',
+                when: 'É útil quando o programa representa entidades com dados e comportamentos relacionados, especialmente em projetos de maior dimensão.'
+            },
+            {
+                id: 'debug', title: 'Erros e depuração (debugging)', terms: ['erro', 'erros', 'debug', 'debugging', 'depurar', 'depuracao', 'bug', 'bugs', 'erro de sintaxe', 'erro logico'],
+                intro: 'Depurar (debugging) é o processo de encontrar, compreender e corrigir problemas num programa. Um erro não significa necessariamente que todo o projeto esteja errado.',
+                uses: ['Descobrir porque o programa não inicia.', 'Corrigir resultados incorretos.', 'Identificar valores inesperados.', 'Melhorar a qualidade e a estabilidade do código.'],
+                how: 'Lê a mensagem de erro, identifica a linha indicada, reproduz o problema e verifica os valores utilizados. Um depurador permite executar o código passo a passo e observar as variáveis.',
+                exampleLang: 'python', example: '# Exemplo com um erro comum\nnumero = "10"\n\n# Isto provoca um problema: texto + inteiro\n# print(numero + 5)\n\n# Uma correção possível\nprint(int(numero) + 5)',
+                explain: ['O valor `"10"` é texto, não é um número inteiro.', '`int(numero)` converte o texto num inteiro, se o conteúdo for válido.', 'Depois da conversão, a soma pode ser efetuada.'],
+                limits: 'Nem todos os problemas produzem uma mensagem de erro. Erros lógicos podem fazer o programa executar sem falhar, mas produzir um resultado errado.',
+                when: 'A depuração faz parte do desenvolvimento normal: testar, observar, corrigir e voltar a testar.'
+            },
+            {
+                id: 'git', title: 'Git e controlo de versões', terms: ['git', 'github', 'controlo de versoes', 'versionamento', 'commit', 'repositorio'],
+                intro: 'Git é um sistema de controlo de versões. Regista alterações feitas aos ficheiros de um projeto e permite consultar versões anteriores, comparar mudanças e trabalhar em equipa.',
+                uses: ['Guardar pontos de situação do projeto.', 'Consultar o histórico de alterações.', 'Criar ramos para experimentar funcionalidades.', 'Juntar alterações de várias pessoas.'],
+                how: 'Um repositório Git contém o histórico do projeto. Um `commit` regista um conjunto de alterações com uma mensagem. Um ramo (branch) permite desenvolver uma linha de trabalho separada.',
+                exampleLang: 'bash', example: 'git init\ngit add .\ngit commit -m "Primeira versão do projeto"\ngit status',
+                explain: ['`git init` cria um repositório na pasta atual.', '`git add .` prepara as alterações.', '`git commit` regista as alterações preparadas.', '`git status` mostra o estado dos ficheiros.'],
+                limits: 'Git controla versões, mas não substitui cópias de segurança. É importante evitar colocar palavras-passe ou dados privados no histórico de um repositório.',
+                when: 'É especialmente útil em projetos que evoluem ao longo do tempo ou são desenvolvidos por várias pessoas.'
+            },
+            {
+                id: 'hardware', title: 'Hardware e componentes do computador', terms: ['hardware', 'cpu', 'processador', 'ram', 'memoria ram', 'ssd', 'disco', 'placa grafica', 'gpu', 'motherboard', 'placa mae'],
+                intro: 'Hardware é o conjunto de componentes físicos de um computador. Cada componente tem uma função diferente e trabalha em conjunto com os restantes.',
+                uses: ['O processador (CPU) executa instruções.', 'A memória RAM guarda temporariamente dados em utilização.', 'O SSD ou disco guarda ficheiros de forma persistente.', 'A placa gráfica (GPU) processa gráficos e outras tarefas paralelas.'],
+                how: 'O sistema operativo coordena a utilização do hardware. O processador executa instruções, a RAM disponibiliza rapidamente dados necessários e o armazenamento mantém os ficheiros mesmo quando o computador está desligado.',
+                exampleLang: 'text', example: 'CPU  → executa instruções e cálculos\nRAM  → guarda temporariamente dados em uso\nSSD  → guarda programas e ficheiros\nGPU  → processa gráficos e tarefas paralelas\nMotherboard → liga os componentes',
+                explain: ['A RAM é normalmente muito rápida, mas é volátil: perde os dados quando não tem alimentação.', 'O SSD é armazenamento persistente.', 'A motherboard permite a comunicação entre componentes.'],
+                limits: 'Um computador não fica necessariamente mais rápido apenas por ter um componente com um número maior. O desempenho depende do equilíbrio entre processador, memória, armazenamento, temperatura e software.',
+                when: 'Compreender hardware ajuda a escolher, montar, diagnosticar e manter computadores.'
+            },
+            {
+                id: 'redes', title: 'Redes de computadores e Internet', terms: ['rede', 'redes', 'internet', 'ip', 'dns', 'router', 'roteador', 'servidor', 'http', 'https'],
+                intro: 'Uma rede de computadores liga dispositivos para que possam trocar dados e partilhar recursos. A Internet é uma rede global de redes que comunicam através de protocolos comuns.',
+                uses: ['Aceder a páginas web e serviços online.', 'Partilhar ficheiros e impressoras.', 'Comunicar entre computadores e servidores.', 'Ligar dispositivos em casas, escolas e empresas.'],
+                how: 'Os dispositivos utilizam endereços IP para identificar interfaces de rede. O DNS ajuda a converter nomes de domínio em endereços IP. Protocolos como HTTP e HTTPS são usados na comunicação web.',
+                exampleLang: 'text', example: 'Utilizador escreve: exemplo.pt\n        ↓\nDNS procura o endereço IP\n        ↓\nNavegador comunica com o servidor\n        ↓\nServidor envia a página\n        ↓\nNavegador apresenta o conteúdo',
+                explain: ['O DNS funciona como um sistema de consulta de nomes.', 'O endereço IP permite encaminhar dados para o destino.', 'HTTPS protege a comunicação web através de encriptação TLS.'],
+                limits: 'Uma ligação de rede pode falhar por várias razões: configuração, sinal, router, servidor, DNS ou operador. É importante diagnosticar cada camada por etapas.',
+                when: 'Este conhecimento é útil para configurar redes, resolver problemas de ligação e compreender como funcionam os serviços online.'
+            },
+            {
+                id: 'seguranca', title: 'Cibersegurança e proteção digital', terms: ['ciberseguranca', 'seguranca informatica', 'phishing', 'malware', 'virus', 'palavra-passe', 'password', 'autenticacao'],
+                intro: 'Cibersegurança é a área que procura proteger sistemas, redes e informação contra acessos indevidos, danos e interrupções. Também envolve hábitos seguros por parte dos utilizadores.',
+                uses: ['Proteger contas e dados pessoais.', 'Reconhecer mensagens fraudulentas.', 'Manter sistemas e aplicações atualizados.', 'Fazer cópias de segurança e limitar permissões.'],
+                how: 'A proteção combina medidas técnicas e comportamentais: palavras-passe únicas, autenticação multifator, atualizações, cópias de segurança, permissões adequadas e atenção a ligações ou anexos suspeitos.',
+                exampleLang: 'text', example: 'Boas práticas:\n1. Utilizar uma palavra-passe diferente em cada serviço.\n2. Ativar autenticação multifator.\n3. Atualizar sistema e aplicações.\n4. Confirmar o remetente antes de abrir ligações.\n5. Manter cópias de segurança importantes.',
+                explain: ['Phishing é uma tentativa de enganar alguém para obter informação ou levá-lo a realizar uma ação.', 'Malware é software malicioso.', 'A autenticação multifator acrescenta uma verificação além da palavra-passe.'],
+                limits: 'Nenhuma medida isolada garante segurança total. A proteção deve ser adequada ao tipo de dados e aos riscos envolvidos.',
+                when: 'É importante para qualquer pessoa que utilize computadores, telemóveis, contas online ou redes.'
+            },
+            {
+                id: 'programacao', title: 'O que é programação?', terms: ['programacao', 'linguagem de programacao', 'programar', 'codigo de computador', 'desenvolvimento de software'],
+                intro: 'Programar é escrever instruções para que um computador execute tarefas. Essas instruções são escritas através de uma linguagem de programação, com regras próprias de sintaxe e significado.',
+                uses: ['Criar aplicações, sites e jogos.', 'Automatizar tarefas repetitivas.', 'Trabalhar com dados e resolver problemas.', 'Controlar dispositivos e sistemas eletrónicos.'],
+                how: 'Normalmente, o processo começa por compreender o problema e planear uma solução. Depois escolhe-se uma linguagem, escreve-se o código, executa-se o programa, testam-se os resultados e corrigem-se os erros.',
+                exampleLang: 'python', example: `preco = 12\nquantidade = 3\ntotal = preco * quantidade\n\nprint("Total a pagar:", total, "euros")`,
+                explain: ['As variáveis guardam o preço e a quantidade.', 'O operador `*` multiplica os valores.', 'O resultado é guardado em `total`.', '`print()` apresenta o resultado.'],
+                limits: 'Um programa só faz aquilo que as instruções permitem. É necessário testar diferentes situações, validar dados e pensar em casos inesperados.',
+                when: 'A programação é útil quando queremos transformar uma ideia ou um problema numa solução que possa ser executada por um computador.'
+            },
+            {
+                id: 'compilador', title: 'Compiladores e interpretadores', terms: ['compilador', 'compiladores', 'interpretador', 'interpretadores', 'compilacao', 'bytecode', 'linguagem compilada', 'linguagem interpretada'],
+                intro: 'Um compilador e um interpretador são ferramentas que permitem executar programas escritos numa linguagem de programação. A diferença está na forma como o código é traduzido e executado.',
+                uses: ['Transformar código numa forma que o computador consegue executar.', 'Detetar determinados erros antes ou durante a execução.', 'Permitir que linguagens de alto nível sejam utilizadas em diferentes sistemas.'],
+                how: 'Um compilador traduz o código para outra representação, muitas vezes código nativo ou bytecode, antes da execução. Um interpretador executa instruções através de um ambiente que as lê e processa. Existem também sistemas híbridos que compilam para bytecode e depois utilizam uma máquina virtual.',
+                exampleLang: 'text', example: `Código-fonte\n    ↓\nCompilador ou interpretador\n    ↓\nRepresentação executável\n    ↓\nExecução do programa`,
+                explain: ['O código-fonte é escrito pelo programador.', 'A ferramenta transforma ou processa as instruções.', 'O ambiente de execução realiza o programa.', 'Python, C++ e Java utilizam modelos de execução diferentes; não se deve reduzir tudo a uma divisão simples.'],
+                limits: 'A distinção entre compilado e interpretado nem sempre é absoluta. Algumas linguagens combinam compilação, bytecode e execução por máquina virtual.',
+                when: 'Este conceito ajuda a perceber porque é que algumas linguagens precisam de compilação e outras utilizam um interpretador ou ambiente de execução.'
+            },
+            {
+                id: 'ide', title: 'IDE e editor de código', terms: ['ide', 'ambiente de desenvolvimento', 'editor de codigo', 'visual studio code', 'vscode', 'debugger'],
+                intro: 'Um editor de código permite escrever e organizar ficheiros de programação. Uma IDE (Integrated Development Environment) reúne várias ferramentas num único ambiente, como editor, execução, depuração e gestão do projeto.',
+                uses: ['Escrever código com realce de sintaxe.', 'Encontrar erros e navegar pelo projeto.', 'Executar e testar programas.', 'Organizar ficheiros, extensões e ferramentas de desenvolvimento.'],
+                how: 'O editor apresenta os ficheiros e facilita a escrita. Uma IDE pode também integrar um compilador, terminal, depurador e ferramentas para construir a aplicação. Algumas ferramentas precisam de extensões para suportar cada linguagem.',
+                exampleLang: 'text', example: `Editor de código → escrever e organizar ficheiros\nTerminal → executar comandos\nDepurador → executar passo a passo\nExtensões → acrescentar suporte a linguagens e ferramentas`,
+                explain: ['O editor ajuda a escrever o código.', 'O terminal permite executar comandos.', 'O depurador ajuda a investigar problemas.', 'As extensões acrescentam funcionalidades.'],
+                limits: 'Uma IDE não substitui a aprendizagem da linguagem. Um editor simples pode ser suficiente para projetos pequenos.',
+                when: 'É útil utilizar um editor ou IDE adequado à linguagem e ao tipo de projeto que estás a desenvolver.'
+            },
+            {
+                id: 'ia', title: 'Inteligência artificial', terms: ['inteligencia artificial', 'ia', 'machine learning', 'aprendizagem automatica', 'modelo de linguagem'],
+                intro: 'Inteligência artificial (IA) é uma área da informática que desenvolve sistemas capazes de realizar tarefas que normalmente exigem capacidades como reconhecer padrões, interpretar linguagem, fazer previsões ou apoiar decisões.',
+                uses: ['Reconhecer imagens e voz.', 'Traduzir e resumir texto.', 'Detetar padrões em grandes conjuntos de dados.', 'Apoiar recomendações e previsões.'],
+                how: 'Uma parte importante da IA moderna utiliza modelos treinados com dados. Durante o treino, o sistema ajusta parâmetros para identificar padrões. Depois, na utilização, recebe uma entrada e produz uma previsão ou resposta. Os resultados podem conter erros e devem ser verificados.',
+                exampleLang: 'text', example: `Dados de exemplo\n    ↓\nTreino do modelo\n    ↓\nModelo aprende padrões\n    ↓\nNova informação\n    ↓\nPrevisão ou resposta`,
+                explain: ['Os dados são utilizados para encontrar padrões.', 'O treino ajusta o modelo.', 'A utilização do modelo produz uma saída.', 'A qualidade depende dos dados, do objetivo e da avaliação.'],
+                limits: 'A IA não pensa nem compreende necessariamente como uma pessoa. Pode produzir respostas incorretas, incompletas ou enviesadas e não deve ser tratada como fonte infalível.',
+                when: 'A IA pode ajudar em tarefas específicas, mas é importante verificar resultados e compreender as limitações do sistema utilizado.'
+            },
+            {
+                id: 'matematica-pa', title: 'Progressão aritmética', terms: ['progressao aritmetica', 'pa', 'razao', 'termo geral'],
+                intro: 'Uma progressão aritmética (PA) é uma sequência numérica em que a diferença entre dois termos consecutivos é sempre constante. Essa diferença chama-se razão e costuma representar-se por `r`.',
+                uses: ['Identificar padrões numéricos.', 'Calcular termos de uma sequência.', 'Resolver problemas de crescimento ou diminuição constante.'],
+                how: 'Para passar de um termo ao seguinte, soma-se sempre a razão. O termo geral pode ser calculado por `a_n = a_1 + (n - 1) × r`, em que `a_1` é o primeiro termo e `n` é a posição do termo pretendido.',
+                exampleLang: 'text', example: 'Sequência: 3, 7, 11, 15, 19, ...\nPrimeiro termo: a1 = 3\nRazão: r = 7 - 3 = 4\n\nQuinto termo:\na5 = 3 + (5 - 1) × 4\na5 = 3 + 16 = 19',
+                explain: ['A razão é 4 porque cada termo aumenta quatro unidades.', '`a_n` representa o termo que está na posição n.', 'Para o quinto termo, substitui-se n por 5 na fórmula.'],
+                limits: 'Numa PA a diferença é constante. Se a diferença entre termos mudar, a sequência não é uma progressão aritmética.',
+                when: 'É útil sempre que uma sequência cresce ou diminui através da adição repetida de uma quantidade fixa.'
+            }
+        ];
+
+        function normalizeTutorText(value) {
+            return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[’']/g, "'").replace(/\s+/g, ' ').trim();
+        }
 
         function toggleChat(open) {
             const chatBox = document.getElementById('chatBox');
             const iconOpen = document.getElementById('chatIconOpen');
             const iconClose = document.getElementById('chatIconClose');
             if (open === undefined) open = chatBox.classList.contains('hidden');
-
             if (open) {
                 chatBox.classList.remove('hidden');
                 chatBox.classList.add('flex');
@@ -944,33 +1241,31 @@
             }
         }
 
-        function askQuickQuestion(qText) {
+        function askQuickQuestion(question) {
             toggleChat(true);
             const input = document.getElementById('chatInput');
-            input.value = qText;
+            input.value = question;
             document.getElementById('chatForm').requestSubmit();
         }
 
         function clearChatHistory() {
             chatHistory = [];
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML = `
+            currentTopic = null;
+            document.getElementById('chatMessages').innerHTML = `
                 <div class="flex gap-2.5 items-start">
-                    <div class="w-8 h-8 rounded-full bg-etpc-blue text-white flex items-center justify-center shrink-0 font-bold text-xs shadow-sm"><i class="fa-solid fa-graduation-cap text-etpc-accent"></i></div>
+                    <div class="w-8 h-8 rounded-full bg-etpc-blue text-white flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-graduation-cap text-etpc-accent"></i></div>
                     <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 text-slate-800 shadow-sm max-w-[90%] leading-relaxed space-y-2">
-                        <p><strong>Conversa reiniciada.</strong></p>
-                        <p>Podes colocar uma nova pergunta sobre programação, tecnologia, matérias escolares ou cursos da ETPC.</p>
+                        <p><strong>Nova conversa iniciada.</strong></p>
+                        <p>O tutor funciona localmente, sem API ou chave. Pergunta sobre programação, informática, matemática, tecnologia ou cursos da ETPC.</p>
                     </div>
                 </div>`;
         }
 
         function escapeHtml(value) {
-            return String(value).replace(/[&<>"']/g, char => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-            }[char]));
+            return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
         }
 
-        // Renderização Markdown limitada e segura: texto, listas, links e blocos de código.
+        // Renderização Markdown limitada e segura: texto, listas, ligações e blocos de código.
         function renderAssistantMarkdown(rawText) {
             const codeBlocks = [];
             let source = String(rawText || '').replace(/\r\n/g, '\n');
@@ -981,7 +1276,6 @@
                 codeBlocks.push(`<div class="my-3 rounded-xl overflow-hidden border border-slate-700 bg-slate-950"><div class="px-3 py-2 bg-slate-900 flex items-center justify-between">${langLabel}<button type="button" class="copy-code text-[11px] text-slate-300 hover:text-white" data-copy-code="${index}"><i class="fa-regular fa-copy mr-1"></i>Copiar código</button></div><pre class="p-3 overflow-x-auto text-[12px] leading-relaxed text-slate-100"><code>${safeCode}</code></pre></div>`);
                 return `%%CODE_BLOCK_${index}%%`;
             });
-
             let escaped = escapeHtml(source);
             escaped = escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_m, label, url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-etpc-blue hover:underline font-semibold">${label}</a>`);
             escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -989,7 +1283,6 @@
             escaped = escaped.replace(/^### (.+)$/gm, '<h4 class="font-bold text-slate-900 text-sm mt-3 mb-1">$1</h4>');
             escaped = escaped.replace(/^## (.+)$/gm, '<h3 class="font-bold text-slate-900 text-base mt-3 mb-1">$1</h3>');
             escaped = escaped.replace(/^# (.+)$/gm, '<h3 class="font-extrabold text-slate-900 text-base mt-3 mb-1">$1</h3>');
-
             const lines = escaped.split('\n');
             const rendered = [];
             let inList = false;
@@ -1005,9 +1298,7 @@
                 }
             }
             if (inList) rendered.push('</ul>');
-            let output = rendered.join('');
-            output = output.replace(/%%CODE_BLOCK_(\d+)%%/g, (_m, index) => codeBlocks[Number(index)] || '');
-            return output;
+            return rendered.join('').replace(/%%CODE_BLOCK_(\d+)%%/g, (_m, index) => codeBlocks[Number(index)] || '');
         }
 
         function appendUserMessage(message) {
@@ -1042,19 +1333,147 @@
             const loader = document.createElement('div');
             loader.id = 'typingIndicator';
             loader.className = 'flex gap-2.5 items-start';
-            loader.innerHTML = `<div class="w-8 h-8 rounded-full bg-etpc-blue text-white flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-graduation-cap text-etpc-accent"></i></div><div class="bg-white border border-slate-200 rounded-2xl rounded-tl-md px-4 py-3 text-xs text-slate-500 shadow-sm"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce"></span><span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce [animation-delay:150ms]"></span><span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce [animation-delay:300ms]"></span><span>A preparar uma explicação...</span></span></div>`;
+            loader.innerHTML = `<div class="w-8 h-8 rounded-full bg-etpc-blue text-white flex items-center justify-center shrink-0 text-xs"><i class="fa-solid fa-graduation-cap text-etpc-accent"></i></div><div class="bg-white border border-slate-200 rounded-2xl rounded-tl-md px-4 py-3 text-xs text-slate-500 shadow-sm"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce"></span><span>A consultar os conteúdos locais...</span></span></div>`;
             chatMessages.appendChild(loader);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function removeTypingIndicator() {
-            document.getElementById('typingIndicator')?.remove();
+        function removeTypingIndicator() { document.getElementById('typingIndicator')?.remove(); }
+
+        function formatTopicAnswer(topic, depth = 'normal') {
+            currentTopic = topic;
+            const detail = depth === 'deep';
+            const simple = depth === 'simple';
+            const uses = topic.uses.map(item => `- ${item}`).join('\n');
+            const explain = topic.explain.map(item => `- ${item}`).join('\n');
+            let answer = `## ${topic.title}\n\n${topic.intro}\n\n### Para que serve?\n${uses}\n\n### Como funciona?\n${topic.how}\n\n### Exemplo prático\n\`\`\`${topic.exampleLang}\n${topic.example}\n\`\`\`\n\n### Explicação do exemplo\n${explain}`;
+            if (detail) {
+                answer += `\n\n### Aspetos importantes\n${topic.limits}\n\n### Quando é uma boa escolha?\n${topic.when}\n\n### Como podes continuar a aprender\n1. Experimenta alterar os valores do exemplo.\n2. Executa o código e observa o resultado.\n3. Tenta criar uma pequena variação sem consultar a solução.`;
+            } else if (simple) {
+                answer = `## ${topic.title}, explicado de forma simples\n\n${topic.intro}\n\n**Ideia principal:** ${topic.when}\n\n### Exemplo\n\`\`\`${topic.exampleLang}\n${topic.example}\n\`\`\`\n\n**O que deves perceber:**\n${explain}`;
+            } else {
+                answer += `\n\n### Em resumo\n${topic.when}\n\nPodes pedir uma explicação mais aprofundada, uma versão mais simples ou outro exemplo de ${topic.title}.`;
+            }
+            return answer;
+        }
+
+        function hasTutorTerm(query, term) {
+            const q = normalizeTutorText(query);
+            const t = normalizeTutorText(term);
+            if (!t) return false;
+            if (t.includes(' ')) return q.includes(t);
+            const words = q.split(/[^a-z0-9+#]+/).filter(Boolean);
+            return words.includes(t);
+        }
+
+        function findTopics(query) {
+            const q = normalizeTutorText(query);
+            return LOCAL_TUTOR_KNOWLEDGE.map(topic => {
+                let score = 0;
+                for (const term of topic.terms) {
+                    const t = normalizeTutorText(term);
+                    if (!t) continue;
+                    if (hasTutorTerm(q, t)) score += t.length > 3 ? 5 + Math.min(t.length / 8, 3) : 2;
+                }
+                if (hasTutorTerm(q, topic.title)) score += 8;
+                return { topic, score };
+            }).filter(item => item.score > 0).sort((a, b) => b.score - a.score);
+        }
+
+        function findLanguageTopics(query) {
+            const q = normalizeTutorText(query);
+            const aliases = {
+                python: ['python'], cpp: ['c++', 'cpp', 'cplusplus'], csharp: ['c#', 'c sharp', 'csharp'],
+                java: ['java'], javascript: ['javascript', 'js'], php: ['php'], c: ['linguagem c', 'programacao em c'],
+                html: ['html'], css: ['css'], sql: ['sql'], gdscript: ['gdscript', 'godot']
+            };
+            const found = [];
+            for (const topic of LOCAL_TUTOR_KNOWLEDGE) {
+                if (!aliases[topic.id]) continue;
+                if (aliases[topic.id].some(alias => hasTutorTerm(q, alias))) found.push(topic);
+            }
+            return [...new Map(found.map(topic => [topic.id, topic])).values()];
+        }
+
+        function compareTopics(topics) {
+            const [a, b] = topics;
+            currentTopic = a;
+            return `## ${a.title} vs. ${b.title}\n\nAs duas são tecnologias úteis, mas foram pensadas para contextos diferentes.\n\n### ${a.title}\n${a.intro}\n\n**Utilizações comuns:**\n${a.uses.slice(0, 3).map(x => `- ${x}`).join('\n')}\n\n### ${b.title}\n${b.intro}\n\n**Utilizações comuns:**\n${b.uses.slice(0, 3).map(x => `- ${x}`).join('\n')}\n\n### Diferenças principais\n- **Objetivo:** ${a.title}: ${a.when} ${b.title}: ${b.when}\n- **Forma de trabalhar:** ${a.how}\n- **Outra característica:** ${b.how}\n\n### Qual devo aprender?\nA escolha depende do projeto e do que pretendes construir. Para começar, escolhe uma das duas e aprende variáveis, condições, ciclos e funções antes de passar para temas mais avançados.\n\nPodes pedir que compare a sintaxe das duas com o mesmo pequeno programa.`;
+        }
+
+        function answerCourseQuestion(query) {
+            const q = normalizeTutorText(query);
+            // Só tratar como pergunta sobre cursos quando o utilizador o indicar explicitamente.
+            if (!/\b(etpc|curso|cursos|formacao|oferta formativa|estagio|fct|inscricao|inscricoes)\b/.test(q)) return null;
+            const courses = ETPC_COURSES_DATA || [];
+            if (/\b(todos os cursos|lista de cursos|quais os cursos|oferta formativa)\b/.test(q)) {
+                const categories = [...new Set(courses.map(c => c.categoryLabel))];
+                return `## Oferta formativa apresentada neste portal\n\nA lista local está organizada nestas áreas:\n${categories.map(category => `- **${category}:** ${courses.filter(c => c.categoryLabel === category).map(c => c.title).join('; ')}`).join('\n')}\n\nA oferta pode mudar de ano para ano. Confirma os cursos disponíveis, vagas e condições no [site oficial da ETPC](https://etpc.pt/).`;
+            }
+            let matches = courses.filter(course => {
+                const text = normalizeTutorText([course.title, course.desc, course.categoryLabel, course.modules.join(' '), course.careers].join(' '));
+                const questionWords = q.split(/[^a-z0-9]+/).filter(word => word.length > 4);
+                return questionWords.some(word => text.split(/[^a-z0-9]+/).includes(word));
+            });
+            if (!matches.length && /\b(programacao|software|informatica|programador|codigo)\b/.test(q)) {
+                matches = courses.filter(course => /software|informatica/i.test(course.title + ' ' + course.categoryLabel)).slice(0, 3);
+            }
+            if (!matches.length) return null;
+            const selected = matches.slice(0, 3);
+            return `## Informação sobre ${selected.length === 1 ? 'o curso' : 'os cursos'}\n\n${selected.map(course => `### ${course.title}\n${course.desc}\n\n**Módulos indicados na base local:**\n${course.modules.map(module => `- ${module}`).join('\n')}\n\n**Saídas profissionais indicadas:** ${course.careers}\n\n**Qualificação apresentada:** ${course.level}`).join('\n\n---\n\n')}\n\n**Nota:** esta é a informação guardada no projeto e pode não refletir alterações recentes. Confirma a oferta, as condições e as candidaturas diretamente em [etpc.pt](https://etpc.pt/).`;
+        }
+
+        function buildLocalAnswer(query) {
+            const q = normalizeTutorText(query);
+            if (!q) return 'Escreve uma pergunta para começarmos.';
+
+            if (/^(ola|ola tutor|bom dia|boa tarde|boa noite|boas|hey|ola tudo bem)[!. ]*$/.test(q)) {
+                return 'Olá! Sou o Tutor Virtual em **modo local**. Posso explicar conceitos, mostrar exemplos de código e ajudar-te a estudar.\n\nPodes começar por perguntar, por exemplo, **“O que é Python?”**, **“Explica os ciclos `for` e `while`”** ou **“Qual é a diferença entre C++ e Python?”**.';
+            }
+            if (/\b(obrigado|obrigada|muito obrigado|agradecido|obrigad[oa])\b/.test(q)) {
+                return 'De nada! Fico contente por a explicação ter ajudado. Podes continuar com uma dúvida sobre o mesmo tema ou experimentar outro exemplo.';
+            }
+            if (/\b(o que sabes fazer|que podes fazer|ajuda|como funcionas|o que fazes)\b/.test(q)) {
+                return '## Como te posso ajudar\n\nEste tutor funciona sem API e sem ligação a um serviço de Inteligência Artificial. Inclui explicações e exemplos locais sobre:\n- **Programação:** Python, C++, C#, Java, JavaScript, PHP, C, GDScript e Arduino.\n- **Desenvolvimento web:** HTML, CSS e SQL.\n- **Fundamentos:** algoritmos, variáveis, condições, ciclos, funções, listas, orientação a objetos e depuração.\n- **Informática:** hardware, redes e cibersegurança.\n- **Estudo:** progressões aritméticas e outros conteúdos que venham a ser adicionados.\n- **ETPC:** informação que está guardada neste projeto sobre cursos.\n\nPosso explicar, simplificar, comparar e apresentar exemplos. Como não existe um modelo generativo ligado, perguntas fora desta base podem não ser reconhecidas.';
+            }
+
+            if (/\b(mais simples|explica de forma simples|nao percebi|não percebi|explica melhor|de forma mais facil)\b/.test(q) && currentTopic) {
+                return formatTopicAnswer(currentTopic, 'simple');
+            }
+            if (/\b(mais a fundo|mais detalhado|detalhadamente|continua|mais detalhes|aprofundar|explica melhor|passo a passo)\b/.test(q) && currentTopic) {
+                return formatTopicAnswer(currentTopic, 'deep');
+            }
+            if (/\b(mostra outro exemplo|outro exemplo|mais um exemplo|exemplo diferente)\b/.test(q) && currentTopic) {
+                return `## Outro exemplo: ${currentTopic.title}\n\n${currentTopic.when}\n\n\`\`\`\n${currentTopic.example}\n\`\`\`\n\nRepara nos elementos que mudam e experimenta alterar os valores. Podes também pedir a explicação de cada linha.`;
+            }
+
+            const courseAnswer = answerCourseQuestion(q);
+            if (courseAnswer) return courseAnswer;
+
+            const languages = findLanguageTopics(q);
+            if (languages.length >= 2 && /\b(diferenca|comparar|compara|qual e melhor|melhor|vs|versus)\b/.test(q)) {
+                return compareTopics(languages.slice(0, 2));
+            }
+
+            const matches = findTopics(q);
+            if (matches.length) {
+                const best = matches[0].topic;
+                const second = matches[1];
+                // Quando a pergunta contém dois conceitos relacionados, responde ao mais relevante para evitar misturar assuntos.
+                const depth = /\b(mais a fundo|mais detalhado|detalhadamente|aprofundar|completo|completa)\b/.test(q) ? 'deep' : 'normal';
+                return formatTopicAnswer(best, depth);
+            }
+
+            if (/\b(etpc|escola|curso|cursos|estagio|fct|inscricao|inscricoes|contacto|morada|telefone)\b/.test(q)) {
+                return 'Posso ajudar com a informação sobre a ETPC que está guardada neste site, mas não tenho acesso em tempo real a vagas, horários, candidaturas ou alterações recentes. Consulta o [site oficial da ETPC](https://etpc.pt/) ou contacta diretamente a escola para confirmar esses dados.\n\nTambém podes perguntar por um curso específico, como Desenvolvimento de Software ou Sistemas de Computação e Redes.';
+            }
+
+            return `## Ainda não tenho esse tema na minha base local\n\nEste assistente foi preparado para funcionar **sem API, sem chave e sem ligação a um modelo externo**. Por isso, não consegue criar uma resposta nova sobre todos os assuntos como faria uma IA generativa.\n\nConsigo explicar os temas que já estão incluídos, como Python, C++, C#, Java, JavaScript, HTML, CSS, PHP, SQL, Godot, Arduino, algoritmos, variáveis, ciclos, funções, bases de dados, hardware, redes, cibersegurança e progressões aritméticas.\n\nExperimenta reformular a pergunta com o nome do tema ou indica o conceito exato que estás a estudar. A base de conhecimentos pode ser aumentada diretamente neste ficheiro, sem instalar uma API.`;
         }
 
         async function handleUserSubmit(event) {
             event.preventDefault();
             if (isChatSending) return;
-
             const input = document.getElementById('chatInput');
             const sendBtn = document.getElementById('sendBtn');
             const query = input.value.trim();
@@ -1062,41 +1481,32 @@
 
             appendUserMessage(query);
             chatHistory.push({ role: 'user', content: query });
-            chatHistory = chatHistory.slice(-16);
+            chatHistory = chatHistory.slice(-20);
             input.value = '';
             isChatSending = true;
             sendBtn.disabled = true;
             sendBtn.classList.add('opacity-60', 'cursor-not-allowed');
             showTypingIndicator();
 
-            try {
-                const response = await fetch(CHAT_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ messages: chatHistory })
-                });
-                const data = await response.json().catch(() => ({}));
-                if (!response.ok) throw new Error(data.error || 'Não foi possível obter uma resposta.');
-                if (!data.reply || typeof data.reply !== 'string') throw new Error('A resposta recebida estava vazia.');
-
-                chatHistory.push({ role: 'assistant', content: data.reply });
-                chatHistory = chatHistory.slice(-16);
-                removeTypingIndicator();
-                appendBotMessage(data.reply);
-            } catch (error) {
-                removeTypingIndicator();
-                const friendlyMessage = error.message === 'Failed to fetch'
-                    ? 'Não foi possível ligar ao servidor. Confirma se estás a abrir o projeto através do WampServer e se o serviço Apache está ativo.'
-                    : error.message;
-                appendBotMessage(`**Não foi possível obter uma resposta da IA.**\n\n${friendlyMessage}\n\nConfirma também se configuraste a chave da API no ficheiro \`api/config.php\`.`);
-                // Não guardar mensagens de erro como respostas do assistente no histórico enviado à API.
-                chatHistory.pop();
-            } finally {
-                isChatSending = false;
-                sendBtn.disabled = false;
-                sendBtn.classList.remove('opacity-60', 'cursor-not-allowed');
-                input.focus();
-            }
+            // Pequena pausa visual para a interação parecer natural. Não existe qualquer pedido de rede.
+            window.setTimeout(() => {
+                try {
+                    const reply = buildLocalAnswer(query);
+                    removeTypingIndicator();
+                    appendBotMessage(reply);
+                    chatHistory.push({ role: 'assistant', content: reply });
+                    chatHistory = chatHistory.slice(-20);
+                } catch (error) {
+                    removeTypingIndicator();
+                    appendBotMessage('Ocorreu um problema ao preparar a explicação local. Experimenta reformular a pergunta.');
+                    console.error('Erro no tutor local:', error);
+                } finally {
+                    isChatSending = false;
+                    sendBtn.disabled = false;
+                    sendBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                    input.focus();
+                }
+            }, 280);
         }
 
         // Copiar exemplos de código apresentados pelo tutor.
