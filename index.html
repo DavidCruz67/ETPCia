@@ -10,19 +10,19 @@
     <!-- Font Awesome Icons 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         etpc: {
-                            blue: '#004B87',
-                            lightBlue: '#0072CE',
-                            darkBlue: '#002F56',
-                            accent: '#F39C12',
-                            accentHover: '#E08E0B',
-                            lightBg: '#F8FAFC'
+                            blue: '#00558A',
+                            lightBlue: '#087DB5',
+                            darkBlue: '#00345B',
+                            accent: '#F58220',
+                            accentHover: '#E66F12',
+                            lightBg: '#F5F8FB'
                         }
                     },
                     fontFamily: {
@@ -44,21 +44,73 @@
         #chatMessages .copy-code { border: 1px solid rgba(255,255,255,.15); padding: 3px 8px; border-radius: 7px; }
         #chatInput:focus-visible, #sendBtn:focus-visible, #chatBox button:focus-visible { outline: 3px solid #F39C12; outline-offset: 2px; }
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+        /* Identidade visual inspirada no portal oficial da ETPC: azul institucional, laranja e branco. */
+        :root { --etpc-navy: #00345B; --etpc-blue: #00558A; --etpc-bright-blue: #168BC4; --etpc-orange: #F58220; --etpc-soft: #F4F7FA; }
+        body { background: #f4f7fa; color: #25384a; }
+        h1, h2, h3, .etpc-brand strong { font-family: 'Montserrat', 'Inter', sans-serif; }
+        .etpc-site-header { border-bottom: 3px solid var(--etpc-orange); }
+        .etpc-topline { background: var(--etpc-navy); color: #dce9f3; font-size: 9px; letter-spacing: .15em; font-weight: 800; padding: 7px 0; }
+        .etpc-topline .max-w-7xl { min-height: 15px; }
+        .etpc-brand-symbol { width: 48px; height: 48px; display: grid; place-items: center; flex: 0 0 auto; }
+        .etpc-brand-symbol svg { width: 100%; height: 100%; filter: drop-shadow(0 3px 3px rgba(0,40,75,.12)); }
+        header nav a { position: relative; padding: 8px 0; color: #25445e; }
+        header nav a::after { content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--etpc-orange); transition: width .2s ease; }
+        header nav a:hover::after, header nav a:focus-visible::after { width: 100%; }
+        #inicio { background-image: linear-gradient(90deg, rgba(0,38,68,.97) 0%, rgba(0,60,100,.92) 58%, rgba(0,54,91,.78) 100%), url('https://etpc.pt/images/upload/ca26f61c77c871ab6173e88d28339348.jpg'); background-size: cover; background-position: center 42%; border-bottom: 5px solid var(--etpc-orange); }
+        #inicio h1 { font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: -.035em; }
+        #inicio .text-etpc-accent { color: #ffad42 !important; }
+        #inicio .rounded-3xl { border-radius: 18px !important; }
+        #cursos, #quiz, #sobre, #recursos, #contactos { scroll-margin-top: 110px; }
+        #cursos .grid article { border-radius: 16px !important; border-top: 4px solid var(--etpc-blue); box-shadow: 0 5px 20px rgba(0,43,78,.06); }
+        #cursos .grid article:hover { transform: translateY(-3px); border-top-color: var(--etpc-orange); box-shadow: 0 12px 28px rgba(0,43,78,.12); }
+        #cursos h2, #quiz h2, #sobre h2, #recursos h2, #contactos h2 { font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: -.025em; }
+        #cursos > div > div:first-child > span, #quiz > div > div:first-child > span, #sobre > div > div:first-child > span, #recursos > div > div:first-child > span { letter-spacing: .13em; }
+        #quizCard { border-radius: 18px !important; box-shadow: 0 10px 35px rgba(0,43,78,.07); border-top: 4px solid var(--etpc-orange); }
+        #chatBox { border-radius: 18px !important; box-shadow: 0 20px 60px rgba(0,32,60,.25); }
+        #chatBox > div:first-child { border-bottom: 3px solid var(--etpc-orange); }
+        #chatMessages { background: #f3f6f9; }
+        #chatInput { font-size: 13px; }
+        #sendBtn { background: var(--etpc-orange); color: #152b3d; }
+        #sendBtn:hover { background: #ff9a36; }
+        #chatToggleBtn { border-radius: 50% !important; background: var(--etpc-navy); border: 3px solid #fff; }
+        #chatToggleBtn:hover { background: var(--etpc-blue); }
+        #contactos { background: linear-gradient(135deg, #002c4c, #004b7c) !important; border-top: 5px solid var(--etpc-orange); }
+        footer { border-top: 4px solid var(--etpc-orange); }
+        button, a { -webkit-tap-highlight-color: transparent; }
+        @media (max-width: 640px) {
+            .etpc-topline { font-size: 8px; letter-spacing: .09em; }
+            .etpc-brand-symbol { width: 40px; height: 40px; }
+            #inicio { background-position: 58% center; }
+            #chatWidget { right: 12px !important; bottom: 12px !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-white focus:text-etpc-blue focus:px-4 focus:py-3 focus:rounded-xl focus:shadow-lg">Saltar para o conteúdo principal</a>
 
     <!-- HEADER / NAVIGATION -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm etpc-site-header">
+        <div class="etpc-topline">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
+                <span>ESCOLA TÉCNICO-PROFISSIONAL DE CANTANHEDE</span>
+                <span class="hidden sm:inline">FORMAÇÃO · INOVAÇÃO · FUTURO</span>
+            </div>
+        </div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="https://etpc.pt/" target="_blank" class="flex items-center gap-3 group">
-                <div class="w-12 h-12 bg-etpc-blue text-white rounded-2xl flex items-center justify-center font-extrabold text-xl shadow-md group-hover:bg-etpc-lightBlue transition-all">
-                    ETPC
+            <a href="https://etpc.pt/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 group etpc-brand">
+                <div class="etpc-brand-symbol" aria-hidden="true">
+                    <svg viewBox="0 0 64 60" role="img" focusable="false">
+                        <path d="M32 1 59 16 32 31 5 16Z" fill="#F9A51A"/>
+                        <path d="M32 15 59 30 32 45 5 30Z" fill="#F58220"/>
+                        <path d="M32 29 59 44 32 59 5 44Z" fill="#168BC4"/>
+                        <path d="M32 1 5 16 32 31 59 16Z" fill="none" stroke="#FFFFFF" stroke-width="2" opacity=".9"/>
+                        <path d="M5 30 32 45 59 30" fill="none" stroke="#FFFFFF" stroke-width="2" opacity=".9"/>
+                    </svg>
                 </div>
                 <div>
-                    <span class="block font-bold text-lg text-etpc-darkBlue leading-tight">ETPC Cantanhede</span>
-                    <span class="block text-xs text-slate-500 font-medium">Escola Técnico-Profissional de Cantanhede</span>
+                    <span class="block font-extrabold text-xl text-etpc-darkBlue leading-tight tracking-tight">ETPC</span>
+                    <span class="block text-[10px] sm:text-[11px] text-slate-500 font-semibold tracking-wide">ESCOLA TÉCNICO-PROFISSIONAL DE CANTANHEDE</span>
                 </div>
             </a>
 
@@ -94,7 +146,7 @@
 
     <main id="main">
     <!-- HERO SECTION -->
-    <section class="relative bg-gradient-to-br from-etpc-darkBlue via-etpc-blue to-blue-900 text-white py-14 sm:py-20 overflow-hidden">
+    <section id="inicio" class="relative bg-gradient-to-br from-etpc-darkBlue via-etpc-blue to-blue-900 text-white py-14 sm:py-20 overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:20px_20px]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-12 gap-10 items-center">
             
@@ -107,7 +159,7 @@
                     O teu sucesso começa aqui, na <span class="text-etpc-accent">ETPC Cantanhede</span>
                 </h1>
                 <p class="text-base sm:text-lg text-blue-100 max-w-2xl font-light leading-relaxed">
-                    Conhece a oferta formativa da ETPC, explora diferentes áreas profissionais e descobre percursos que combinam aprendizagem teórica e prática.
+                    Descobre a oferta formativa da ETPC, conhece as áreas profissionais e encontra um percurso que liga conhecimentos, experiência prática e preparação para o futuro.
                 </p>
 
                 <!-- Hero Badges -->
@@ -122,9 +174,9 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <span>Explorar Cursos da ETPC</span>
                     </a>
-                    <a href="#quiz" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3.5 rounded-xl border border-white/30 backdrop-blur-sm transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-compass text-etpc-accent"></i>
-                        <span>Fazer Quiz Vocacional</span>
+                    <a href="https://etpc.pt/" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3.5 rounded-xl border border-white/30 backdrop-blur-sm transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-etpc-accent"></i>
+                        <span>Site oficial da ETPC</span>
                     </a>
                 </div>
             </div>
@@ -432,7 +484,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
                 <p>© 2026 ETPC - Escola Técnico-Profissional de Cantanhede.</p>
-                <p class="text-slate-600 mt-0.5">Portal informativo de apoio. Confirma dados, inscrições e condições no <a href="https://etpc.pt/" target="_blank" rel="noopener noreferrer" class="underline text-slate-500">site oficial da ETPC</a>.</p>
+                <p class="text-slate-600 mt-0.5">Portal informativo de apoio. Confirma sempre os dados, inscrições e condições no <a href="https://etpc.pt/" target="_blank" rel="noopener noreferrer" class="underline text-slate-500">site oficial da ETPC</a>.</p>
             </div>
             <div class="flex items-center gap-4">
                 <a href="https://etpc.pt/" target="_blank" class="hover:text-white transition-colors">etpc.pt <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-1"></i></a>
@@ -480,10 +532,10 @@
                         <i class="fa-solid fa-robot text-etpc-accent"></i>
                     </div>
                     <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 text-slate-800 shadow-sm space-y-2 max-w-[85%] leading-relaxed">
-                        <p>Olá! Sou o <strong>Tutor Virtual local</strong> deste portal.</p>
-                        <p>Funciona com uma base local de informação sobre cursos, estágios/FCT, inscrições, apoios, vida escolar, projetos e conteúdos de informática.</p>
-                        <p>Podes escrever como falares normalmente, misturar uma saudação com a pergunta, usar frases curtas ou cometer alguns erros de escrita. O tutor tenta corrigir e associar palavras parecidas ao assunto pretendido.</p>
-                        <p>Quando a informação não está confirmada, explica o que sabe e indica onde deves confirmar, em vez de inventar.</p>
+                        <p>Olá! Sou o <strong>Tutor Virtual da ETPC</strong>.</p>
+                        <p>Ajudo-te a encontrar informação sobre a oferta formativa, cursos, FCT/estágio, inscrições, apoios, projetos, serviços e vida escolar.</p>
+                        <p>Reconheço diferentes formas de perguntar, sinónimos, abreviaturas e vários erros ortográficos. Também consigo separar uma saudação do pedido e responder a mais do que uma questão na mesma mensagem.</p>
+                        <p>Utilizo uma base local de informação e assinalo os dados que precisas de confirmar junto da escola.</p>
                     </div>
                 </div>
             </div>
@@ -503,6 +555,10 @@
                 <button type="button" onclick="askQuickQuestion('Quais são os contactos, a morada e o telefone da ETPC?')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">📞 Contactos</button>
                 <button type="button" onclick="askQuickQuestion('Mostra o calendário escolar e as interrupções letivas.')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">📅 Calendário</button>
                 <button type="button" onclick="askQuickQuestion('Que oportunidades Erasmus+ existem na ETPC?')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">🌍 Erasmus+</button>
+                <button type="button" onclick="askQuickQuestion('Que curso devo escolher se gosto de criar jogos e aplicações?')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">🎮 Criar jogos</button>
+                <button type="button" onclick="askQuickQuestion('O que é a PAP e como funciona a apresentação final?')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">📘 PAP</button>
+                <button type="button" onclick="askQuickQuestion('Bom dia, que cursos posso estudar na ETPC e como faço a inscrição?')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">👋 Começar por aqui</button>
+                <button type="button" onclick="askQuickQuestion('Que curso ensina a reparar computadores, configurar Wi-Fi e trabalhar com servidores?')" class="bg-slate-100 hover:bg-blue-50 hover:text-etpc-blue text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 transition-colors">🖥️ Computadores e redes</button>
             </div>
 
             <!-- Input Area -->
@@ -954,11 +1010,13 @@
         }
 
         function filterCourses() {
-            const searchTerm = document.getElementById('courseSearchInput').value.toLowerCase().trim();
+            const searchTerm = document.getElementById('courseSearchInput').value.trim();
+            const normalizedSearch = normalizeTutorText(searchTerm);
+            const searchWords = tutorWords(normalizedSearch);
             let filtered = ETPC_COURSES_DATA.filter(c => {
                 const matchCategory = (currentActiveCategory === 'all') || (c.category === currentActiveCategory);
-                const fullText = (c.title + " " + c.desc + " " + c.modules.join(" ") + " " + c.careers + " " + c.categoryLabel + " " + c.aliases.join(" ") + " " + c.status).toLowerCase();
-                const matchSearch = !searchTerm || fullText.includes(searchTerm);
+                const fullText = normalizeTutorText([c.title, c.desc, c.modules.join(' '), c.careers, c.categoryLabel, ...(c.aliases || []), ...(COURSE_EXTRA_ALIASES[c.id] || []), c.status].join(' '));
+                const matchSearch = !normalizedSearch || (fullText.includes(normalizedSearch) || (searchWords.length > 0 && searchWords.every(word => hasTutorTerm(fullText, word))));
                 return matchCategory && matchSearch;
             });
             renderCourses(filtered);
@@ -1440,26 +1498,20 @@
         }
 
         const COMMON_TUTOR_TYPO_FIXES = {
-            'estracio': 'estagio', 'estragios': 'estagios', 'estragio': 'estagio',
-            'estagiu': 'estagio', 'estagoi': 'estagio', 'estajio': 'estagio',
-            'cursso': 'curso', 'curssos': 'cursos', 'curço': 'curso', 'curços': 'cursos',
-            'softwer': 'software', 'softwear': 'software', 'softaware': 'software',
-            'informatic': 'informatica', 'informaticaa': 'informatica',
-            'desenvolvmento': 'desenvolvimento', 'desenvolvimeto': 'desenvolvimento',
-            'programcao': 'programacao', 'programaçao': 'programacao',
-            'inscicao': 'inscricao', 'inscricão': 'inscricao', 'inscricoes': 'inscricoes',
-            'matrcula': 'matricula', 'matricua': 'matricula', 'matrucula': 'matricula',
-            'candidatora': 'candidatura', 'candidtura': 'candidatura',
-            'displinas': 'disciplinas', 'discplinas': 'disciplinas',
-            'duracoa': 'duracao', 'duraçao': 'duracao',
-            'profisionais': 'profissionais', 'profissinais': 'profissionais',
-            'dispniveis': 'disponiveis', 'disponivel': 'disponivel',
-            'contactoss': 'contactos', 'telefne': 'telefone', 'telemovel': 'telemovel',
-            'calandario': 'calendario', 'calendairo': 'calendario',
-            'restauracaoo': 'restauracao', 'restauraçao': 'restauracao',
-            'eletronicaa': 'eletronica', 'automacaoo': 'automacao',
-            'administraçao': 'administracao', 'intervencaoo': 'intervencao',
-            'protecaoo': 'protecao', 'saudee': 'saude'
+            // Estágio / FCT
+            'estracio':'estagio','estragios':'estagios','estragio':'estagio','estagiu':'estagio','estagoi':'estagio','estajio':'estagio','estagiuo':'estagio','estageo':'estagio','estagioss':'estagios','estagoiu':'estagio','estragioo':'estagio','fcta':'fct',
+            // Cursos e formação
+            'cursso':'curso','curssos':'cursos','curço':'curso','curços':'cursos','cusro':'curso','cusrso':'cursos','cusrso':'cursos','curssoos':'cursos','curo':'curso','kero':'quero','keria':'queria','qero':'quero','quria':'queria','profisionais':'profissionais','profissinais':'profissionais','proficional':'profissional','profisional':'profissional','profisionl':'profissional','formacaoo':'formacao','formacoa':'formacao','formacão':'formacao','qualificaçao':'qualificacao','qualificao':'qualificacao',
+            // Tecnologia e informática
+            'softwer':'software','softwear':'software','softaware':'software','softwere':'software','sotware':'software','sofware':'software','informaticaa':'informatica','informatic':'informatica','informatca':'informatica','informatcia':'informatica','informtica':'informatica','desenvolvmento':'desenvolvimento','desenvolvimeto':'desenvolvimento','desenvolvimnto':'desenvolvimento','desenvolvimneto':'desenvolvimento','programcao':'programacao','programaçao':'programacao','progama':'programa','progamação':'programacao','progamacao':'programacao','aplicaçoes':'aplicacoes','aplicacoe':'aplicacoes','computadro':'computador','computadore':'computador','compudator':'computador','conputador':'computador','robóticaa':'robotica','robotia':'robotica','eletronicaa':'eletronica','eletroncia':'eletronica','automacaoo':'automacao','autmacao':'automacao','servidore':'servidores',
+            // Matrículas e candidaturas
+            'inscicao':'inscricao','inscricão':'inscricao','inscrissão':'inscricao','inscriçao':'inscricao','inscricoes':'inscricoes','inscricoes':'inscricoes','matrcula':'matricula','matricua':'matricula','matrucula':'matricula','matriculaa':'matricula','matrícula':'matricula','candidatora':'candidatura','candidtura':'candidatura','candidatrura':'candidatura','candiatura':'candidatura',
+            // Vida escolar e perguntas correntes
+            'displinas':'disciplinas','discplinas':'disciplinas','diciplinas':'disciplinas','disiplinas':'disciplinas','disciplinaas':'disciplinas','materias':'materias','duracoa':'duracao','duraçao':'duracao','durassao':'duracao','dispniveis':'disponiveis','disponiveiss':'disponiveis','contactoss':'contactos','contatos':'contactos','contatcos':'contactos','telefne':'telefone','telemovel':'telemovel','calandario':'calendario','calendairo':'calendario','calendarioo':'calendario','horaro':'horario','horarrio':'horario','apoioss':'apoios','alimentaçao':'alimentacao','alimentassao':'alimentacao','transprte':'transporte','tranporte':'transporte','transprtes':'transportes',
+            // Escola e expressões comuns
+            'escloa':'escola','escoal':'escola','esocla':'escola','escolaa':'escola','etppc':'etpc','etcp':'etpc','cantanhde':'cantanhede','cantanhedeee':'cantanhede','universiddae':'universidade','univercidade':'universidade','univercidade':'universidade','univesidade':'universidade','politecnicoo':'politecnico','politecnico':'politecnico','obrigda':'obrigada','obrigadoo':'obrigado','porfavor':'porfavor','pergnta':'pergunta','perguntar':'perguntar',
+            // Áreas profissionais
+            'restauracaoo':'restauracao','restauraçao':'restauracao','restaurassao':'restauracao','administraçao':'administracao','adminstracao':'administracao','intervencaoo':'intervencao','protecaoo':'protecao','protecaoo':'protecao','saudee':'saude','esteticaa':'estetica','cabeleireiroo':'cabeleireiro','desporto':'desporto','marketingg':'marketing'
         };
 
         let tutorSpellingVocabulary = null;
@@ -1472,7 +1524,7 @@
                 'escola','etpc','depois','antes','esta','este','essa','isso','isto','tambem','ainda',
                 'fazer','faz','tenho','tem','tens','pode','podem','posso','devo','deves','ser','ter',
                 'uma','umas','uns','dos','das','com','sem','que','nos','nas','num','numa','por','aos',
-                'aqui','ali','la','dia','boa','bom','ola','oi','sim','nao','não','obrigado','obrigada'
+                'aqui','ali','la','dia','boa','bom','ola','oi','sim','nao','não','obrigado','obrigada','ensina','ensino','ensinar','ensinam','ensinado','ensinaram','ensinares','ensine','ensinem','estuda','estudar','estudam','estudante','estudantes','gosta','gostam','gostava','gostavam','preciso','precisas','precisamos','trabalha','trabalham','trabalhar','trabalhei','ajuda','ajudar','ajudam','aprende','aprender','aprendem','conhece','conhecer','explica','explicar','explicam','pergunta','perguntas','perguntar','procuro','procurar','procura','quero','queria','queremos','posso','podemos','podes','pode','podem','tenho','temos','tens','tem','fazer','faz','fazem','fazem','fica','ficar','funciona','funcionar','existe','existem','gostaria','sabia','saber','sabes','sei','dizer','diz','diga','ajude','ajudem'
             ]);
             const sources = [
                 ...ETPC_COURSES_DATA.flatMap(course => [course.id, course.title, ...(course.aliases || []), ...(course.modules || [])]),
@@ -1483,7 +1535,8 @@
                 'profissionais','disponibilidade','empresas','trabalho','emprego','curriculo','materias',
                 'horario','documentos','requisitos','apoios','transporte','alimentacao','propinas','gratuito',
                 'bolsa','candidatar','abertura','vagas','aprovacao','formacao','restauracao','administracao',
-                'intervencao','protecao','eletronica','automacao','computadores','tecnologia','marketing'
+                'intervencao','protecao','eletronica','automacao','computadores','tecnologia','marketing',
+                'estagio curricular','fct','formacao em contexto de trabalho','empresa de acolhimento','orientador','monitor','relatorio de estagio','pap','defesa da pap','prova de aptidao profissional','apresentacao final','curso cef','curso efa','ufcd','requalificacao','adultos','matriz curricular','plano de estudos','disciplinas','modulos','unidades de formacao','candidatura','matricula online','pre inscricao','vagas','turmas','horarios','faltas','notas','refeitorio','cantina','bar escolar','transporte escolar','passe','apoio social','alojamento','bolsa','seguro escolar','visita escolar','visitar escola','open day','dia aberto','visita guiada','biblioteca','laboratorio','laboratorios','sala de aula','sala informatica','equipamentos','servidores','wifi','wi fi','rede sem fios','portatil','portateis','computador','computadores','reparar pc','montar pc','criar jogos','criacao de jogos','aplicacoes moveis','pagina web','paginas web','sites','website','bases de dados','ciberseguranca','programador','programadora','design grafico','comunicacao','publicidade','redes sociais','restaurante','cozinheiro','pastelaria','auxiliar de saude','protecao civil','treinador','treinadora','maquilhagem','cabelo','beleza','idosos','criancas','familias','comunidade'
             ];
             const words = new Set();
             for (const source of sources) {
@@ -1515,23 +1568,30 @@
         }
 
         function correctTutorToken(token) {
-            if (!token || token.length < 5 || !/^[a-z]+$/.test(token)) return token;
+            if (!token || !/^[a-z]+$/.test(token)) return token;
             if (COMMON_TUTOR_TYPO_FIXES[token]) return COMMON_TUTOR_TYPO_FIXES[token];
+            if (token.length < 5) return token;
             const vocabulary = getTutorSpellingVocabulary();
             if (tutorSpellingVocabularySet?.has(token)) return token;
             const maxDistance = token.length >= 8 ? 2 : 1;
             let bestDistance = maxDistance + 1;
             let bestWords = [];
-            for (const candidate of vocabulary) {
-                if (candidate === token || Math.abs(candidate.length - token.length) > maxDistance) continue;
-                const distance = tutorEditDistance(token, candidate, maxDistance);
-                if (distance < bestDistance) {
-                    bestDistance = distance;
-                    bestWords = [candidate];
-                } else if (distance === bestDistance) {
-                    bestWords.push(candidate);
+            for (let pass = 0; pass < 2; pass++) {
+                for (const candidate of vocabulary) {
+                    if (candidate === token || Math.abs(candidate.length - token.length) > maxDistance) continue;
+                    const sameInitial = candidate[0] === token[0];
+                    if (pass === 0 && !sameInitial) continue;
+                    // Uma letra inicial errada também pode ser corrigida em palavras longas.
+                    if (pass === 1 && (sameInitial || token.length < 7)) continue;
+                    const distance = cachedTutorDistance(token, candidate, maxDistance);
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        bestWords = [candidate];
+                    } else if (distance === bestDistance) {
+                        bestWords.push(candidate);
+                    }
                 }
-                if (bestDistance === 1 && bestWords.length > 3) break;
+                if (bestDistance <= 1 || bestWords.length > 1) break;
             }
             // Só corrige automaticamente quando existe um candidato claro.
             return bestDistance <= maxDistance && bestWords.length === 1 ? bestWords[0] : token;
@@ -1548,7 +1608,7 @@
         function extractGreetingFromQuestion(value) {
             let cleaned = normalizeTutorText(value);
             let foundGreeting = false;
-            const greetingPattern = /^(?:ola|oi|bom dia|boa tarde|boa noite|boas|hey|hello|tudo bem|tudo fixe)\b\s*/;
+            const greetingPattern = /^(?:ola|oi|bom dia|boa tarde|boa noite|boas|bom dia a todos|boa tarde a todos|saudacoes|hey|hello|olaa|tudo bem|tudo fixe|como estas|como esta)\b\s*/;
             for (let i = 0; i < 5; i++) {
                 const match = cleaned.match(greetingPattern);
                 if (!match) break;
@@ -1695,13 +1755,62 @@
             return answer;
         }
 
+        const TUTOR_MATCH_STOPWORDS = new Set(['a','as','o','os','de','da','do','das','dos','em','no','na','nos','nas','e','ou','um','uma','uns','umas','para','por','com','sem','que','qual','quais','como','onde','quando','sobre','meu','minha','teu','tua','seu','sua']);
+
+        function tutorWords(value) {
+            return basicNormalizeTutorText(value).split(' ').filter(word => word && !TUTOR_MATCH_STOPWORDS.has(word));
+        }
+
+        const tutorDistanceCache = new Map();
+        function cachedTutorDistance(a, b, cutoff = 3) {
+            const key = a + '|' + b + '|' + cutoff;
+            if (tutorDistanceCache.has(key)) return tutorDistanceCache.get(key);
+            const value = tutorEditDistance(a, b, cutoff);
+            if (tutorDistanceCache.size > 6000) tutorDistanceCache.clear();
+            tutorDistanceCache.set(key, value);
+            return value;
+        }
+
+        function tutorApproxWordMatch(word, target) {
+            if (word === target) return true;
+            if (word.length < 5 || target.length < 5 || word[0] !== target[0]) return false;
+            const maxDistance = Math.max(word.length, target.length) >= 9 ? 2 : 1;
+            if (Math.abs(word.length - target.length) > maxDistance) return false;
+            const distance = cachedTutorDistance(word, target, maxDistance);
+            return distance <= maxDistance && distance / Math.max(word.length, target.length) <= .22;
+        }
+
+        function tutorApproxPhraseMatch(query, phrase) {
+            const queryWords = tutorWords(query);
+            const phraseWords = tutorWords(phrase);
+            if (!queryWords.length || !phraseWords.length) return false;
+            if (phraseWords.length === 1) return queryWords.some(word => tutorApproxWordMatch(word, phraseWords[0]));
+            let matched = 0;
+            const used = new Set();
+            for (const target of phraseWords) {
+                let bestIndex = -1;
+                let bestDistance = Infinity;
+                queryWords.forEach((word, index) => {
+                    if (used.has(index)) return;
+                    const distance = word === target ? 0 : tutorEditDistance(word, target, 2);
+                    const allowed = word.length >= 9 && target.length >= 9 ? 2 : 1;
+                    if (distance <= allowed && distance / Math.max(word.length, target.length) <= .22 && distance < bestDistance) {
+                        bestIndex = index;
+                        bestDistance = distance;
+                    }
+                });
+                if (bestIndex >= 0) { matched++; used.add(bestIndex); }
+            }
+            const required = phraseWords.length >= 4 ? phraseWords.length - 1 : phraseWords.length;
+            return matched >= required;
+        }
+
         function hasTutorTerm(query, term) {
             const q = normalizeTutorText(query);
             const t = normalizeTutorText(term);
             if (!t) return false;
-            if (t.includes(' ')) return q.includes(t);
-            const words = q.split(/[^a-z0-9+#]+/).filter(Boolean);
-            return words.includes(t);
+            if (q.includes(t)) return true;
+            return tutorApproxPhraseMatch(q, t);
         }
 
         function findTopics(query) {
@@ -1772,13 +1881,13 @@
         // Expressões adicionais que as pessoas podem usar para perguntar a mesma coisa.
         // São sinónimos de pesquisa; não acrescentam factos à base de informação.
         const SITE_INTENT_EXTRA_TERMS = {
-            registration: ['como entro na etpc','quero entrar na escola','como começo a estudar','como comeco a estudar','fazer a minha candidatura','fazer a matricula online','matricula online','inscricao online','inscrever o meu filho','inscrever me na escola','como me escrevo','quero estudar na etpc','como consigo uma vaga','quero candidatar me','onde faco a matricula'],
-            contacts: ['numero da escola','numero de telefone','email da secretaria','contactar a secretaria','como falar com a etpc','como chegar a escola','rua da escola','local da escola','onde esta situada a etpc','como posso ligar'],
-            calendar: ['quando sao as ferias','quando e que ha ferias','quando temos aulas','quando começam e acabam as aulas','datas das aulas','pausas letivas','interrupcao das aulas','dias de aulas','feriados escolares','ferias escolares 2026','ferias escolares 2027'],
+            registration: ['como entro na etpc','quero entrar na escola','como começo a estudar','como comeco a estudar','fazer a minha candidatura','fazer a matricula online','matricula online','inscricao online','inscrever o meu filho','inscrever me na escola','como me escrevo','quero estudar na etpc','como consigo uma vaga','quero candidatar me','onde faco a matricula','quero frequentar a escola','como posso entrar','como iniciar a matricula','onde faço a inscrição','onde posso candidatar-me','candidatura para o proximo ano','matricula para o proximo ano letivo','inscricao para o 10 ano','entrar depois do nono ano','quero mudar de escola','transferencia de escola','transferir de escola','quando abrem as inscricoes','inscricoes abertas','lista de documentos para matricula','ficha de inscricao'],
+            contacts: ['numero da escola','numero de telefone','email da secretaria','contactar a secretaria','como falar com a etpc','como chegar a escola','rua da escola','local da escola','onde esta situada a etpc','como posso ligar','morada completa','codigo postal da escola','telefone geral','endereco eletronico','enviar email','falar com alguem da escola','contacto da direcao','contacto dos servicos administrativos','secretaria escolar','localizacao da etpc','mapa da escola'],
+            calendar: ['quando sao as ferias','quando e que ha ferias','quando temos aulas','quando começam e acabam as aulas','datas das aulas','pausas letivas','interrupcao das aulas','dias de aulas','feriados escolares','ferias escolares 2026','ferias escolares 2027','inicio do ano letivo','fim do ano letivo','quando comeca o segundo periodo','quando acaba o primeiro periodo','ferias de natal','ferias da pascoa','ferias de carnaval','interrupcao letiva','calendario das aulas','datas dos periodos'],
             professional: ['como funciona o ensino profissional','o que e um curso profissional','como e estudar numa escola profissional','curso de tres anos','curso de nivel quatro','curso com equivalencia ao 12 ano','diploma profissional'],
-            fct: ['estagio curricular','estagio do curso','estagio nas empresas','estagiar','fazer estagio','onde vou estagiar','em que ano se faz estagio','quando se faz estagio','quantas horas de estagio','local de estagio','pratica profissional','experiencia em empresa','formacao pratica numa empresa','trabalho numa empresa durante o curso'],
-            support: ['receber apoio','ajuda financeira','apoio financeiro','apoio escolar','ajuda para transporte','ajuda para alimentacao','subsidio de refeicao','dinheiro para transporte','bolsa de estudo','o curso e pago','tenho de pagar o curso','o ensino e gratuito'],
-            higher: ['posso ir para a universidade','posso ir para o politécnico','depois do 12 ano','continuar na faculdade','entrar na faculdade','fazer uma licenciatura','seguir para a universidade','prosseguir para a faculdade'],
+            fct: ['estagio curricular','estagio do curso','estagio nas empresas','estagiar','fazer estagio','onde vou estagiar','em que ano se faz estagio','quando se faz estagio','quantas horas de estagio','local de estagio','pratica profissional','experiencia em empresa','formacao pratica numa empresa','trabalho numa empresa durante o curso','fazer a fct','o que e a fct','o que significa fct','formacao pratica','experiencia de trabalho','estagio no 10 ano','estagio no 11 ano','estagio no 12 ano','quem arranja a empresa de estagio','a escola procura empresa','posso escolher a empresa','relatorio de estagio','avaliacao de estagio','orientador de estagio','tutor da empresa','entidade de acolhimento','horas de formacao em contexto de trabalho','estagio profissional do curso','pratica em contexto real de trabalho','relatorio fct','relatorio de fct','apresentacao do estagio','seguro de estagio','entidade que recebe o estagiario','empresa de acolhimento','orientador da escola','orientador na empresa','avaliacao da fct','estagio remunerado','remuneracao no estagio','subsidio de estagio','visita de acompanhamento','diario de estagio','o que fazer durante o estagio'],
+            support: ['receber apoio','ajuda financeira','apoio financeiro','apoio escolar','ajuda para transporte','ajuda para alimentacao','subsidio de refeicao','dinheiro para transporte','bolsa de estudo','o curso e pago','tenho de pagar o curso','o ensino e gratuito','apoio para refeicoes','apoio para almoço','apoio para o passe','apoio de deslocacao','apoio de alojamento','subsídio de alimentação','subsídio de transporte','quanto custa estudar','existem propinas','tenho despesas com o curso','material escolar gratuito','apoios sociais'],
+            higher: ['posso ir para a universidade','posso ir para o politécnico','depois do 12 ano','continuar na faculdade','entrar na faculdade','fazer uma licenciatura','seguir para a universidade','prosseguir para a faculdade','posso candidatar-me ao ensino superior','curso profissional da acesso a universidade','que exames preciso para a faculdade','posso ir para o politecnico','continuar os estudos','estudar depois do curso','entrar no ensino superior','prosseguir estudos'],
             efa: ['curso para adultos','estudar em adulto','formacao para maiores de idade','voltar a estudar em adulto','terminar os estudos em adulto'],
             adult: ['ufcd para adultos','formacao curta','formacao de curta duracao','formacao para trabalhadores','formacao para desempregados','certificado de competencias','modulos de formacao'],
             requirements: ['o que preciso para entrar','o que e necessario para entrar','que documentos preciso','documentos necessarios','posso entrar com o nono ano','posso entrar depois do nono','idade para entrar','quem se pode inscrever','escolaridade para entrar'],
@@ -1791,26 +1900,30 @@
             news: ['novidades da escola','o que aconteceu na etpc','atividades recentes','eventos da escola','noticias da escola'],
             history: ['historia da escola','quando foi fundada','origem da etpc','como surgiu a escola'],
             mission: ['objetivos da escola','valores da etpc','projeto da escola','o que distingue a etpc'],
-            pap: ['prova de aptidao profissional','trabalho final do curso','projeto final','apresentacao da pap','defesa da pap'],
+            pap: ['prova de aptidao profissional','trabalho final do curso','projeto final','apresentacao da pap','defesa da pap','o que significa pap','o que e a pap','como funciona a pap','como se faz a pap','projeto de aptidao profissional','trabalho de fim de curso','apresentacao final do curso','defender o projeto','relatorio final','tema da pap','escolher tema para pap','avaliacao da pap','ideias para pap','exemplos de pap','como escolher o tema','cronograma da pap','orientador da pap','apresentacao perante o juri','juri da pap','prova final do curso'],
             docs: ['regulamentos da escola','documentos oficiais','projeto educativo','regulamento interno','regulamento do estagio'],
-            platform: ['plataforma dos alunos','portal dos alunos','e community','ecommunity','onde vejo as notas','consultar faltas','ver horarios online','area do aluno'],
-            hours: ['a secretaria esta aberta','quando fecha a secretaria','horas da secretaria','horario de atendimento','horas de funcionamento da escola','a que horas posso ligar']
+            platform: ['plataforma dos alunos','portal dos alunos','e community','ecommunity','onde vejo as notas','consultar faltas','ver horarios online','area do aluno','entrar na ecommunity','login dos alunos','plataforma escolar','consultar classificacoes','ver as minhas notas','ver as faltas','consultar horario','onde vejo os avisos','portal escolar'],
+            hours: ['a secretaria esta aberta','quando fecha a secretaria','horas da secretaria','horario de atendimento','horas de funcionamento da escola','a que horas posso ligar','a escola esta aberta','horario de funcionamento','horas de atendimento da secretaria','que horas abre a secretaria','que horas fecha a escola','posso ligar de manha','horario da secretaria']
         };
 
         const COURSE_INTENTS = {
-          careers:['saida profissional','saidas profissionais','saídas profissionais','trabalhar','emprego','profissao','profissão','carreira','onde posso trabalhar','mercado de trabalho','que trabalho posso fazer','que profissao posso ter','em que empresas','o que posso ser','empregabilidade','oportunidades de trabalho'],
-          curriculum:['disciplinas','materias','matérias','plano curricular','curriculo','currículo','modulos','módulos','unidades curriculares','cadeiras','horario das aulas','horário das aulas','o que vou aprender','o que se aprende','o que se estuda','conteudos','conteúdos','aulas que tenho'],
+          careers:['saida profissional','saidas profissionais','trabalhar','emprego','profissao','carreira','onde posso trabalhar','mercado de trabalho','que trabalho posso fazer','que profissao posso ter','em que empresas','o que posso ser','empregabilidade','oportunidades de trabalho','saidas no mercado','futuro profissional','onde arranjo trabalho','que profissao consigo','trabalhos relacionados','empresas que contratam','areas de emprego'],
+          curriculum:['disciplinas','materias','plano curricular','curriculo','modulos','unidades curriculares','cadeiras','horario das aulas','o que vou aprender','o que se aprende','o que se estuda','conteudos','aulas que tenho','plano de estudos','matriz curricular','componentes de formacao','unidades de formacao','modulos que vou ter','o que dao nas aulas','que materias tem','cadeiras do curso'],
           qualification:['qualificacao','qualificação','qualificacoes','qualificações','equivalencia','equivalência','nivel','nível','certificacao','certificação','12 ano','12.º ano','diploma','escolaridade','secundario','secundário','que certificado recebo','o que ganho no final'],
-          duration:['duracao','duração','quantos anos','quanto tempo','anos de curso','tempo de curso','três anos','quando acaba','quanto dura','tempo para terminar'],
-          access:['requisitos','condicoes de acesso','condições de acesso','quem pode entrar','quem se pode candidatar','idade minima','idade mínima','habilitacoes','habilitações','o que preciso para entrar','posso entrar','que ano preciso'],
+          duration:['duracao','quantos anos','quanto tempo','anos de curso','tempo de curso','tres anos','quando acaba','quanto dura','tempo para terminar','em que ano termina','ate que ano vou estudar','quanto tempo demora','periodo de formacao'],
+          access:['requisitos','condicoes de acesso','quem pode entrar','quem se pode candidatar','idade minima','habilitacoes','o que preciso para entrar','posso entrar','que ano preciso','preciso do nono ano','tenho de ter o 9 ano','documentos para entrar','idade para estudar','quem pode frequentar','posso entrar com o 8 ano'],
           fct:['estagio','estágios','fct','empresa','empresas','formacao em contexto de trabalho','formação em contexto de trabalho','estagiar','local de estagio','horas de estagio','parte pratica em empresa','experiencia profissional'],
           costs:['preco','preço','custo','custos','gratuito','gratuita','grátis','propinas','pagar','apoio','apoios','subsídio','transporte','alimentação','bolsa','dinheiro','despesas','refeicao','refeição'],
           status:['vagas','disponibilidade','aberto','aberta','inscricoes abertas','inscrições abertas','aprovado','aprovacao','aprovação','vai abrir','estado do curso','ha vagas','há vagas','posso entrar este ano','turmas abertas']
         };
 
         function phraseScore(q, phrases) {
-            let score=0;
-            for (const phrase of phrases) { const p=normalizeTutorText(phrase); if (!p) continue; if (p.includes(' ')) { if(q.includes(p)) score+=5+Math.min(p.length/12,3); } else if(hasTutorTerm(q,p)) score+=p.length>4?2:1; }
+            let score = 0;
+            for (const phrase of phrases) {
+                const p = normalizeTutorText(phrase);
+                if (!p || !hasTutorTerm(q, p)) continue;
+                score += p.includes(' ') ? 5 + Math.min(p.length / 12, 3) : (p.length > 4 ? 2 : 1);
+            }
             return score;
         }
         function detectCourseIntent(q) {
@@ -1821,18 +1934,18 @@
             return best.id;
         }
         const COURSE_EXTRA_ALIASES = {
-            software: ['criar programas','fazer programas','desenvolver sites','criar sites','criar aplicacoes','desenvolver aplicacoes','criar jogos','programador','programadora','codificar'],
-            redes: ['montar computadores','reparar computadores','arranjar computadores','consertar computadores','montagem de computadores','reparacao de computadores','assistencia tecnica','tecnico de computadores','configurar redes','servidores','hardware'],
-            eletronica: ['robotica','robos','robots','arduino','circuitos','automatismos','eletricidade','sistemas eletricos','maquinas automaticas'],
-            social: ['ajudar pessoas','trabalhar com idosos','apoio a familias','apoio a comunidade','animacao social','instituicoes sociais','intervencao comunitaria'],
-            saude: ['trabalhar em hospital','cuidados de saude','ajudar doentes','cuidados a idosos','clinica','centro de saude'],
-            cabeleireiro: ['cortar cabelo','penteados','cuidar do cabelo','barbearia','coloracao','madeixas'],
-            estetica: ['beleza','maquilhagem','massagens','tratamentos de beleza','cuidados de rosto','cuidados de corpo'],
-            cozinha: ['cozinhar','chef','restaurantes','culinaria','preparar comida','pastelaria','confeccionar pratos'],
-            gestao: ['administrar empresas','gerir empresas','contabilidade','escritorio','administracao de empresas','gestao de empresas'],
-            marketing: ['redes sociais','publicidade','criar campanhas','comunicacao digital','marketing digital','promover marcas'],
-            desporto: ['treinador','atividade fisica','treinar pessoas','fitness','ginasio','preparacao fisica'],
-            civil: ['bombeiros','protecao civil','emergencia','emergencias','seguranca','catastrofes','proteger pessoas']
+            software: ['criar programas','fazer programas','desenvolver sites','criar sites','criar paginas web','construir paginas web','criar aplicacoes','desenvolver aplicacoes','criar jogos','programador','programadora','codificar','escrever codigo','desenvolvimento web','programacao web','aplicacoes moveis','apps','aplicacoes para telemovel','sistemas informaticos','criar software','programas para computador','programar jogos','desenvolver um videojogo','fazer uma app','criar uma app','websites','programacao de computadores','inteligencia artificial','bases de dados'],
+            redes: ['montar computadores','montar pc','reparar computadores','reparar pc','arranjar computadores','consertar computadores','manutencao de computadores','montagem de computadores','reparacao de computadores','assistencia tecnica','tecnico de computadores','configurar redes','instalar redes','wifi','wi fi','internet','servidores','hardware','portateis','formatar computador','instalar windows','instalar linux','redes informaticas','administrar sistemas','ciberseguranca','suporte tecnico','helpdesk','cabos de rede','fibra otica','computadores avariados'],
+            eletronica: ['robotica','robos','robots','arduino','raspberry pi','circuitos','automatismos','eletricidade','sistemas eletricos','maquinas automaticas','programar maquinas','automacao industrial','eletronica industrial','sensores','motores eletricos','placas eletronicas','reparar equipamentos eletronicos','domotica','controladores plc'],
+            social: ['ajudar pessoas','trabalhar com idosos','apoio a familias','apoio a comunidade','animacao social','instituicoes sociais','intervencao comunitaria','trabalhar com criancas','apoio a criancas','ajudar familias','inclusao social','trabalho comunitario','apoio a pessoas vulneraveis','instituicao particular de solidariedade social','ipss'],
+            saude: ['trabalhar em hospital','cuidados de saude','ajudar doentes','cuidados a idosos','clinica','centro de saude','trabalhar em lares','apoio a utentes','higiene e conforto','auxiliar de enfermagem','assistente de saude','cuidados hospitalares','apoio a pacientes','saude hospitalar'],
+            cabeleireiro: ['cortar cabelo','penteados','cuidar do cabelo','barbearia','coloracao','madeixas','pintar cabelo','lavar cabelo','cabeleireira','cabeleireiro masculino','corte de cabelo','tratamentos capilares','imagem pessoal'],
+            estetica: ['beleza','maquilhagem','massagens','tratamentos de beleza','cuidados de rosto','cuidados de corpo','depilacao','unhas','manicure','pedicure','spa','bem estar','tratamentos esteticos','esteticista','cuidados esteticos'],
+            cozinha: ['cozinhar','chef','restaurantes','culinaria','preparar comida','pastelaria','confeccionar pratos','cozinheiro','cozinheira','hotelaria','restauracao','fazer sobremesas','fazer bolos','cozinha profissional','trabalhar num restaurante','catering','cozinha de hotel','gastronomia'],
+            gestao: ['administrar empresas','gerir empresas','contabilidade','escritorio','administracao de empresas','gestao de empresas','trabalhar num escritorio','secretariado','recursos humanos','faturacao','documentos administrativos','organizar empresas','gestor','assistente administrativo','logistica','gestao de stocks'],
+            marketing: ['redes sociais','publicidade','criar campanhas','comunicacao digital','marketing digital','promover marcas','fazer anuncios','design de publicidade','relacoes publicas','criar conteudos','fotografia e video para marcas','gestao de redes sociais','comunicacao empresarial','eventos','publicar nas redes sociais'],
+            desporto: ['treinador','treinadora','atividade fisica','treinar pessoas','fitness','ginasio','preparacao fisica','dar treinos','organizar atividades desportivas','aulas de desporto','exercicio fisico','personal trainer','treino desportivo','desporto escolar','arbitragem'],
+            civil: ['bombeiros','protecao civil','emergencia','emergencias','seguranca','catastrofes','proteger pessoas','prevenir riscos','socorro','planeamento de emergencia','incendios','inundacoes','riscos naturais','seguranca comunitaria']
         };
 
         function matchCourse(query) {
@@ -1844,8 +1957,10 @@
                 for (const alias of aliases) {
                     const a = normalizeTutorText(alias);
                     if (!a) continue;
-                    if (a.includes(' ') && q.includes(a)) score = Math.max(score, 12 + Math.min(a.length / 8, 6));
-                    else if (!a.includes(' ') && hasTutorTerm(q, a)) score += a.length > 5 ? 4 : 1;
+                    if (hasTutorTerm(q, a)) {
+                        const aliasScore = a.includes(' ') ? 12 + Math.min(a.length / 8, 6) : (a.length > 5 ? 4 : 1);
+                        score = Math.max(score, aliasScore);
+                    }
                 }
                 const titleWords = normalizeTutorText(course.title).split(/[^a-z0-9+#]+/).filter(word => word.length > 3);
                 score += titleWords.filter(word => hasTutorTerm(q, word)).length * 2;
@@ -1878,15 +1993,20 @@
         }
 
         function isAllCoursesRequest(q) {
-            return /\b(todos os cursos|todas as formacoes|todas as formações|lista completa|lista de cursos|quais os cursos|quais sao os cursos|que cursos existem|que cursos ha|que cursos tem|cursos disponiveis|cursos disponíveis|cursos da etpc|oferta formativa|mostra me os cursos|mostra os cursos|quero ver os cursos|quero conhecer os cursos|diz me os cursos)\b/.test(q);
+            const text = normalizeTutorText(q);
+            return /\b(todos os cursos|todas as formacoes|lista completa|lista de cursos|quais os cursos|quais sao os cursos|quais cursos|que cursos existem|que cursos ha|que cursos tem|cursos disponiveis|cursos da etpc|oferta formativa|mostra me os cursos|mostra os cursos|quero ver os cursos|quero conhecer os cursos|quero saber cursos|quero saber os cursos|quero saber quais cursos|saber todos os cursos|diz me os cursos|que posso estudar|o que posso estudar|opcoes de cursos|opcoes formativas|areas de formacao|areas que existem|cursos que posso tirar|cursos que posso fazer|quero conhecer a oferta|lista de formacoes|todos os cursos profissionais|todos os curso|quais sao os curso|que curso ha na escola|que cursos tem a escola|o que ha para estudar|o que existe para estudar|quais formacoes existem|que formacoes existem|formacoes da etpc|oferta da escola|o que a etpc oferece|o que posso estudar na escola|quais areas de formacao|que areas de formacao existem|areas da etpc|cursos que a etpc tem|quais cursos tem a etpc|quais cursos ha na etpc)\b/.test(text)
+                || /^(?:quero )?(?:ver )?(?:os )?(?:cursos|formacoes|oferta formativa)$/.test(text);
         }
 
         function linkList(links){return links.map(([label,url])=>`- [${label}](${url})`).join('\n');}
         function answerCourseQuestion(query) {
             const q = normalizeTutorText(query);
             const course = matchCourse(query);
-            const category = detectCourseCategory(q);
-            if (isAllCoursesRequest(q)) {
+            const asksAllCourses = isAllCoursesRequest(q);
+            const asksOnlyCEF = /\b(apenas cef|somente cef|so os cef|todos os cursos cef|todos os cef|cursos cef)\b/.test(q);
+            const mentionsCEFAsExtra = /\b(incluindo cef|com os cef|e os cef|mais os cef|inclui os cef|profissionais e cef|profissionais e os cef|profissionais e cursos cef)\b/.test(q);
+            const category = (asksAllCourses && mentionsCEFAsExtra && !asksOnlyCEF) ? null : detectCourseCategory(q);
+            if (asksAllCourses) {
                 const list = category ? ETPC_COURSES_DATA.filter(item => item.category === category) : ETPC_COURSES_DATA;
                 const prof = list.filter(item => item.statusType === 'listed');
                 const cef = list.filter(item => item.statusType === 'pending');
@@ -1912,6 +2032,55 @@
             if(intent==='status')return `## Estado e disponibilidade — ${course.title}\n\n${course.status}. Este estado não confirma vagas, turmas abertas ou aceitação de candidaturas neste momento. Contacta a ETPC para verificar a disponibilidade real.\n\n${link}\n[Pré-inscrição](https://community.e-schooling.com/MatriculaNova/Index?schoolId=0b875ac5-dc1a-49e4-93d2-8356bdfd71b1)\n[Contactos](https://etpc.pt/pt/contactos)`;
             return `## ${course.title}\n\n${course.desc}\n\n### Competências e áreas abordadas\n${course.modules.map(x=>'- '+x).join('\n')}\n\n### Contextos profissionais\n${course.careers}\n\n### Qualificação\n${course.level}\n\n### Estado indicado na ficha\n${course.status}\n\n${link}`;
         }
+        function hasExplicitCourseMention(query) {
+            const q = normalizeTutorText(query);
+            for (const course of ETPC_COURSES_DATA) {
+                const exactAliases = [course.title, course.id, ...(course.aliases || [])].map(normalizeTutorText).filter(Boolean);
+                if (exactAliases.some(alias => alias.includes(' ') ? q.includes(alias) : q.split(' ').includes(alias))) return true;
+            }
+            return false;
+        }
+
+        function findMentionedCourses(query) {
+            const q = normalizeTutorText(query);
+            return ETPC_COURSES_DATA.map(course => {
+                const aliases = [course.title, course.id, ...(course.aliases || []), ...(COURSE_EXTRA_ALIASES[course.id] || [])];
+                const score = aliases.reduce((best, alias) => {
+                    const value = normalizeTutorText(alias);
+                    if (!value || !hasTutorTerm(q, value)) return best;
+                    return Math.max(best, value.includes(' ') ? 12 + Math.min(value.length / 8, 6) : (value.length >= 4 ? 5 : 2));
+                }, 0);
+                return { course, score };
+            }).filter(item => item.score >= 4).sort((a, b) => b.score - a.score).map(item => item.course);
+        }
+
+        function compareCourses(courses) {
+            const [a, b] = courses;
+            lastCourseId = a.id;
+            return `## Comparação de cursos: ${a.title} e ${b.title}
+
+### ${a.title}
+${a.desc}
+
+**O que vais desenvolver:**
+${a.modules.map(item => '- ' + item).join('\n')}
+
+**Contextos profissionais:** ${a.careers}
+
+### ${b.title}
+${b.desc}
+
+**O que vais desenvolver:**
+${b.modules.map(item => '- ' + item).join('\n')}
+
+**Contextos profissionais:** ${b.careers}
+
+### Como escolher?
+O primeiro percurso está mais relacionado com as tarefas descritas na primeira secção; o segundo com as tarefas da segunda. A melhor opção depende do tipo de atividades de que gostas e do trabalho que imaginas fazer. Compara também os planos curriculares atualizados com a escola.
+
+[Fichas oficiais: ${a.title}](${a.link}) · [${b.title}](${b.link})`;
+        }
+
         function findSiteItem(query) {
             const q = normalizeTutorText(query);
             let best = null;
@@ -1921,10 +2090,8 @@
                 for (const term of terms) {
                     const t = normalizeTutorText(term);
                     if (!t) continue;
-                    if (t.includes(' ')) {
-                        if (q.includes(t)) score += 5 + Math.min(t.length / 12, 3);
-                    } else if (hasTutorTerm(q, t)) {
-                        score += t.length > 4 ? 2 : (['fct','ufcd','pap','cte','efa','cef','piepe'].includes(t) ? 4 : 1);
+                    if (hasTutorTerm(q, t)) {
+                        score += t.includes(' ') ? 5 + Math.min(t.length / 12, 3) : (t.length > 4 ? 2 : (['fct','ufcd','pap','cte','efa','cef','piepe'].includes(t) ? 4 : 1));
                     }
                 }
                 if (q.includes(normalizeTutorText(item.title))) score += 8;
@@ -1932,15 +2099,49 @@
             }
             return best && best.score >= 2 ? best.item : null;
         }
+        function getTutorCorrectionNotice(value) {
+            const rawWords = basicNormalizeTutorText(value).split(' ').filter(Boolean);
+            const changes = [];
+            for (const rawWord of rawWords) {
+                const corrected = correctTutorToken(rawWord);
+                if (corrected !== rawWord && !changes.some(item => item.from === rawWord)) changes.push({ from: rawWord, to: corrected });
+            }
+            if (!changes.length) return '';
+            const shown = changes.slice(0, 3).map(item => `“${item.from}” → “${item.to}”`).join(', ');
+            return `*Interpretei algumas palavras: ${shown}.*\n\n`;
+        }
+
+        function splitCompoundTutorQuestion(value) {
+            return String(value || '')
+                .replace(/\b(alem disso|para alem disso|e tambem|tambem queria saber|tambem gostava de saber|outra questao|outra duvida|ja agora)\b/gi, '§')
+                .split(/[?;\n]+|§/)
+                .map(part => part.trim().replace(/^[,.:!\-\s]+|[,.:!\-\s]+$/g, ''))
+                .filter(part => part.length >= 3)
+                .slice(0, 4);
+        }
+
         function buildLocalAnswer(query) {
             const greeting = extractGreetingFromQuestion(query);
             if (!greeting.query) {
-                return 'Olá! 😊 Sou o Tutor Virtual informativo da ETPC. Posso ajudar-te com a lista completa de cursos, estágios/FCT, inscrições, apoios, disciplinas, saídas profissionais, contactos, calendário, exames, projetos e também com temas de programação e informática.\n\nPodes escrever à tua maneira, usar frases curtas ou cometer alguns erros de escrita. Vou tentar perceber o que pretendes e relacionar a pergunta com a informação disponível.';
+                return 'Olá! Bem-vindo/a ao Tutor Virtual da ETPC. 😊\n\nPosso ajudar-te a explorar todos os cursos, comparar áreas, perceber o estágio/FCT, consultar inscrições e requisitos, conhecer os apoios, encontrar contactos e documentos, perceber a PAP, o Erasmus+, o calendário escolar e muito mais. Também respondo a perguntas sobre programação, informática e conteúdos de estudo.\n\nEscreve como falares normalmente — mesmo com abreviaturas, palavras trocadas ou erros de escrita. Vou tentar perceber a intenção e indicar quando algum dado precisa de confirmação pela escola.';
             }
-            const answer = buildLocalAnswerCore(greeting.query);
-            if (greeting.hasGreeting && !/^Olá[!,\s]/i.test(answer)) {
-                return `Olá! Claro, vamos a isso.\n\n${answer}`;
+
+            const parts = splitCompoundTutorQuestion(greeting.query);
+            let answer;
+            if (parts.length > 1) {
+                const responses = [];
+                for (const part of parts) {
+                    const next = buildLocalAnswerCore(part);
+                    if (next && !responses.includes(next)) responses.push(next);
+                }
+                answer = responses.join('\n\n---\n\n');
+            } else {
+                answer = buildLocalAnswerCore(greeting.query);
             }
+
+            const correctionNotice = getTutorCorrectionNotice(query);
+            if (correctionNotice) answer = correctionNotice + answer;
+            if (greeting.hasGreeting && !/^Olá[!,\s]/i.test(answer)) answer = `Olá! Claro, vamos a isso.\n\n${answer}`;
             return answer;
         }
 
@@ -1957,12 +2158,15 @@
                 return '## Como escolher um curso\n\nNão existe um curso melhor para toda a gente. A escolha depende do que gostas de fazer, das tarefas com que te identificas e do tipo de trabalho que imaginas para o futuro.\n\n- **Criar programas, aplicações e sites:** Desenvolvimento de Software.\n- **Montar computadores, configurar redes e servidores:** Sistemas de Computação e Redes.\n- **Trabalhar com circuitos, equipamentos e automatismos:** Eletrónica e Automação.\n- **Apoiar pessoas e comunidades:** Apoio à Intervenção Social ou Auxiliar de Saúde.\n- **Trabalhar com cabelo, estética ou bem-estar:** Cabeleireiro/a ou Esteticista.\n- **Cozinhar e trabalhar em restauração:** Cozinha e Restauração.\n- **Organizar empresas, comunicação ou campanhas:** Gestão e Administração ou Comunicação/Marketing.\n- **Planear atividades físicas ou prevenir riscos:** Desporto ou Proteção Civil.\n\nEstas são pistas iniciais baseadas nas áreas descritas pela ETPC. Podes dizer-me as atividades de que gostas e comparo os cursos correspondentes.\n\n[Ver todos os cursos](https://etpc.pt/) · [Contactar a ETPC](https://etpc.pt/pt/contactos)';
             }
 
-            if (/\b(o que sabes fazer|que podes fazer|ajuda|como funcionas|o que fazes|que informacao tens|que perguntas posso fazer|em que me podes ajudar|que assuntos conheces)\b/.test(q)) {
+            if (/\b(o que sabes fazer|que podes fazer|ajuda|como funcionas|o que fazes|que informacao tens|que perguntas posso fazer|em que me podes ajudar|que assuntos conheces|como posso usar te|o que posso perguntar|que tipo de duvidas respondes|como me podes ajudar)\b/.test(q)) {
                 return '## O que podes perguntar\n\n- **Cursos:** todos os cursos, áreas, competências, o que vais aprender, saídas profissionais, qualificação, duração e estado das fichas.\n- **Estágio/FCT:** o que é, para que serve, regulamento, horas e o que deve ser confirmado para cada curso.\n- **Inscrições:** pré-inscrição, matrícula, requisitos, documentos e contactos.\n- **Apoios:** alimentação, transporte, alojamento, bolsas e condições a confirmar.\n- **Escola:** calendário, férias, horários publicados, secretaria, documentos, notícias e plataformas.\n- **Percursos:** CEF, formação modular para adultos, Erasmus+, exames nacionais e acesso ao ensino superior.\n- **Projetos:** PAP, EQAVET, Centro Tecnológico Especializado e Eco-Escolas.\n- **Estudo:** programação, HTML, CSS, Python, JavaScript, PHP, SQL, Godot, Arduino, redes, hardware, cibersegurança e matemática.\n\nPodes escrever, por exemplo: “bom dia, quero ver todos os cursos”, “estracio no curso de software?”, “que curso ensina a montar computadores?”, “posso ir para a universidade?” ou “como faço a matricula?”';
             }
 
-            // Perguntas de seguimento: usa o último curso referido mesmo quando a frase é curta.
-            if (lastCourseId && /^(e |em |mas |tambem |depois |mais |explica |fala |quanto |quando |onde |que |qual )/.test(q) &&
+            // Perguntas de seguimento: conserva o último curso quando a pergunta é claramente sobre esse curso.
+            const possibleSchoolTopic = findSiteItem(query);
+            const asksSchoolWideTopic = possibleSchoolTopic && ['support','registration','contacts','calendar','hours','docs','platform'].includes(possibleSchoolTopic.id);
+            const explicitCourseContext = hasExplicitCourseMention(query) || /\b(este curso|esse curso|nesse curso|deste curso|do curso|para o curso|na turma|desta turma)\b/.test(q);
+            if (lastCourseId && (!asksSchoolWideTopic || explicitCourseContext) && /^(e |em |mas |tambem |depois |mais |explica |fala |quanto |quantos |quando |onde |que |qual |quais |nesse |deste )/.test(q) &&
                 /\b(estagio|disciplinas|materias|curriculo|duracao|apoios|custos|requisitos|qualificacao|vagas|saidas|emprego|horas|empresas|certificado)\b/.test(q)) {
                 const previousCourse = ETPC_COURSES_DATA.find(item => item.id === lastCourseId);
                 if (previousCourse) return answerCourseQuestion(`${previousCourse.title} ${q}`);
@@ -1981,7 +2185,34 @@
             const allCoursesRequest = isAllCoursesRequest(q);
             if (allCoursesRequest) {
                 const allCoursesAnswer = answerCourseQuestion(query);
-                if (allCoursesAnswer) return allCoursesAnswer;
+                if (allCoursesAnswer) {
+                    const extraAnswers = [];
+                    const asksRegistrationToo = /\b(inscricao|inscrever|inscrevo|matricula|matricular|candidatura|candidatar|pre inscricao|pre matricula)\b/.test(q);
+                    const asksSupportToo = /\b(apoio|apoios|subsidio|alimentacao|transporte|alojamento|bolsa|propinas|gratuito|custos)\b/.test(q);
+                    if (asksRegistrationToo) {
+                        const item = SITE_KB.find(entry => entry.id === 'registration');
+                        if (item) extraAnswers.push(`## ${item.title}\n\n${item.answer}\n\n### Ligações oficiais\n${linkList(item.links)}`);
+                    }
+                    if (asksSupportToo) {
+                        const item = SITE_KB.find(entry => entry.id === 'support');
+                        if (item) extraAnswers.push(`## ${item.title}\n\n${item.answer}\n\n### Ligações oficiais\n${linkList(item.links)}`);
+                    }
+                    return [allCoursesAnswer, ...extraAnswers].join('\n\n---\n\n');
+                }
+            }
+
+            // Comparação entre dois cursos mencionados na mesma pergunta.
+            const comparisonIntent = /\b(diferenca|comparar|compara|comparacao|qual e melhor|qual dos dois|vs|versus)\b/.test(q);
+            if (comparisonIntent) {
+                const mentioned = findMentionedCourses(query);
+                if (mentioned.length >= 2) return compareCourses(mentioned.slice(0, 2));
+            }
+
+            // Pedidos genéricos sobre a escola e a oferta formativa.
+            if (/\b(fala me da etpc|fala sobre a etpc|o que e a etpc|que escola e a etpc|conhecer a escola|apresenta me a escola|apresentacao da escola|informacoes sobre a escola)\b/.test(q)) {
+                const overview = '## Conhece a ETPC Cantanhede\n\nA Escola Técnico-Profissional de Cantanhede apresenta percursos de ensino profissional em diferentes áreas, com uma componente de formação técnica e prática. A oferta inclui áreas como Informática, Automação, Saúde e Bem-Estar, Restauração, Gestão, Comunicação, Desporto e Proteção Civil.\n\nA escola participa também em projetos como Erasmus+, Eco-Escolas e iniciativas ligadas à modernização tecnológica. Para consultar os cursos, notícias, projetos e informação atualizada, utiliza os canais oficiais.\n\n[Website oficial da ETPC](https://etpc.pt/) · [Sobre a escola](https://etpc.pt/historia) · [Contactos](https://etpc.pt/pt/contactos)';
+                if (/curso|cursos|oferta|formacao/.test(q)) return overview + '\n\n' + answerCourseQuestion('todos os cursos');
+                return overview;
             }
 
             const registrationQuestion = /\b(inscricao|inscrever|inscrevo|escrevo|matricula|matricular|candidatura|candidatar|pre inscricao|pre matricula|entrar na etpc|entrar na escola|vaga)\b/.test(q);
@@ -1991,7 +2222,8 @@
             }
 
             const siteItem = findSiteItem(query);
-            if (siteItem && ['registration','contacts','calendar','hours','docs','platform'].includes(siteItem.id)) {
+            const explicitlyMentionedCourse = hasExplicitCourseMention(query);
+            if (siteItem && (['registration','contacts','calendar','hours','docs','platform'].includes(siteItem.id) || (['support','fct'].includes(siteItem.id) && !explicitlyMentionedCourse))) {
                 lastInstitutionTopic = siteItem.id;
                 const mentionedCourse = siteItem.id === 'registration' ? matchCourse(query) : null;
                 if (mentionedCourse?.statusType === 'pending') {
@@ -2018,7 +2250,7 @@
             }
 
             // Algumas perguntas usam palavras vagas. Tenta relacioná-las com uma área da escola.
-            if (/\b(etpc|escola|curso|cursos|formacao|inscricao|contacto|morada|telefone|fct|estagio|estagios)\b/.test(q)) {
+            if (/\b(etpc|escola|curso|cursos|formacao|inscricao|contacto|morada|telefone|fct|estagio|estagios|cef|pap|ufcd|erasmus|apoios)\b/.test(q)) {
                 const related = findRelatedTutorSuggestions(q);
                 if (related.length) {
                     return `## Vamos aproximar a tua pergunta\n\nNão reconheci a frase exatamente, mas encontrei estes assuntos que podem estar relacionados:\n${related.map(item => `- **${item.title}**`).join('\n')}\n\nPodes reformular com uma destas palavras ou escrever o nome do curso/assunto. Também podes consultar os [contactos oficiais da ETPC](https://etpc.pt/pt/contactos).`;
@@ -2039,21 +2271,21 @@
             if (!queryWords.length) return [];
             const candidates = [];
             for (const course of ETPC_COURSES_DATA) {
-                const searchable = normalizeTutorText([course.title, course.id, ...(course.aliases || []), course.desc].join(' '));
-                const words = new Set(searchable.split(' '));
-                const score = queryWords.reduce((sum, word) => sum + (words.has(word) ? 1 : 0), 0);
+                const searchable = normalizeTutorText([course.title, course.id, ...(course.aliases || []), ...(COURSE_EXTRA_ALIASES[course.id] || []), course.desc, ...(course.modules || []), course.careers].join(' '));
+                const words = [...new Set(searchable.split(' '))];
+                const score = queryWords.reduce((sum, word) => sum + (words.some(candidate => tutorApproxWordMatch(word, candidate)) ? 1 : 0), 0);
                 if (score > 0) candidates.push({ title: course.title, score });
             }
             for (const topic of LOCAL_TUTOR_KNOWLEDGE) {
                 const searchable = normalizeTutorText([topic.title, ...(topic.terms || [])].join(' '));
-                const words = new Set(searchable.split(' '));
-                const score = queryWords.reduce((sum, word) => sum + (words.has(word) ? 1 : 0), 0);
+                const words = [...new Set(searchable.split(' '))];
+                const score = queryWords.reduce((sum, word) => sum + (words.some(candidate => tutorApproxWordMatch(word, candidate)) ? 1 : 0), 0);
                 if (score > 0) candidates.push({ title: topic.title, score });
             }
             for (const item of SITE_KB) {
                 const searchable = normalizeTutorText([item.title, ...(item.terms || []), ...(SITE_INTENT_EXTRA_TERMS[item.id] || [])].join(' '));
-                const words = new Set(searchable.split(' '));
-                const score = queryWords.reduce((sum, word) => sum + (words.has(word) ? 1 : 0), 0);
+                const words = [...new Set(searchable.split(' '))];
+                const score = queryWords.reduce((sum, word) => sum + (words.some(candidate => tutorApproxWordMatch(word, candidate)) ? 1 : 0), 0);
                 if (score > 0) candidates.push({ title: item.title, score });
             }
             return candidates.sort((a, b) => b.score - a.score).filter((item, index, array) => array.findIndex(other => other.title === item.title) === index).slice(0, 4);
